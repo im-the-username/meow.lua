@@ -59,8 +59,8 @@ ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 ScreenGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
 
 local MainFrame = Instance.new("Frame")
-MainFrame.Size = UDim2.new(0, 300, 0, 780)
-MainFrame.Position = UDim2.new(0.5, -150, 0.5, -390)
+MainFrame.Size = UDim2.new(0, 300, 0, 920)
+MainFrame.Position = UDim2.new(0.5, -150, 0.5, -460)
 MainFrame.BackgroundColor3 = Color3.fromRGB(14, 14, 16)
 MainFrame.BorderSizePixel = 0
 MainFrame.ClipsDescendants = true
@@ -89,7 +89,7 @@ local Title = Instance.new("TextLabel")
 Title.Size = UDim2.new(1, -50, 1, 0)
 Title.Position = UDim2.new(0, 14, 0, 0)
 Title.BackgroundTransparency = 1
-Title.Text = "gab's Rings  •  v2.2"
+Title.Text = "gab's Rings  •  v2.5"
 Title.TextColor3 = Color3.fromRGB(240, 240, 240)
 Title.Font = Enum.Font.GothamBold
 Title.TextSize = 14
@@ -115,7 +115,7 @@ Content.BackgroundTransparency = 1
 Content.BorderSizePixel = 0
 Content.ScrollBarThickness = 4
 Content.ScrollBarImageColor3 = Color3.fromRGB(70, 70, 80)
-Content.CanvasSize = UDim2.new(0, 0, 0, 920)
+Content.CanvasSize = UDim2.new(0, 0, 0, 1080)
 Content.ScrollingDirection = Enum.ScrollingDirection.Y
 Content.Parent = MainFrame
 
@@ -168,19 +168,23 @@ local ToggleButton = makeButton("Your Ring  •  Off", 24, Color3.fromRGB(160, 4
 local LocalSphereButton = makeHalfButton("Triangle  •  Off", 15, 58, Color3.fromRGB(50, 50, 90))
 local LocalSquareButton = makeHalfButton("Square  •  Off", 155, 58, Color3.fromRGB(65, 45, 100))
 local LocalCubeButton = makeHalfButton("Cube  •  Off", 15, 92, Color3.fromRGB(40, 70, 100))
-local LocalTornadoButton = makeHalfButton("Tornado  •  Off", 155, 92, Color3.fromRGB(90, 45, 45))
+local LocalDownConeButton = makeHalfButton("Down Cone  •  Off", 155, 92, Color3.fromRGB(90, 45, 45))
 local LocalBallButton = makeHalfButton("Sphere  •  Off", 15, 126, Color3.fromRGB(30, 90, 110))
 local LocalHexButton = makeHalfButton("Hexagon  •  Off", 155, 126, Color3.fromRGB(80, 50, 120))
 local LocalRectButton = makeHalfButton("Rectangle  •  Off", 15, 160, Color3.fromRGB(60, 80, 50))
 local LocalBoxButton = makeHalfButton("Box  •  Off", 155, 160, Color3.fromRGB(90, 60, 40))
+local LocalPyramidButton = makeHalfButton("Pyramid  •  Off", 15, 194, Color3.fromRGB(100, 70, 40))
+local LocalConeButton = makeHalfButton("Cone  •  Off", 155, 194, Color3.fromRGB(70, 90, 50))
+local LocalOctaButton = makeHalfButton("Octahedron  •  Off", 15, 228, Color3.fromRGB(50, 80, 100))
+local LocalStarButton = makeHalfButton("Star  •  Off", 155, 228, Color3.fromRGB(140, 100, 30))
 
-local CursorButton = makeButton("Cursor Follow  •  Off", 194, Color3.fromRGB(160, 40, 40))
-local FreezeButton = makeButton("Freeze Positions  •  Off", 228, Color3.fromRGB(50, 50, 55))
-local SpeedModeButton = makeButton("Mode: Smooth (Recommended)", 262, Color3.fromRGB(45, 90, 140))
+local CursorButton = makeButton("Cursor Follow  •  Off", 262, Color3.fromRGB(160, 40, 40))
+local FreezeButton = makeButton("Freeze Positions  •  Off", 296, Color3.fromRGB(50, 50, 55))
+local SpeedModeButton = makeButton("Mode: Smooth (Recommended)", 330, Color3.fromRGB(45, 90, 140))
 
 local RadiusFrame = Instance.new("Frame")
 RadiusFrame.Size = UDim2.new(0, 270, 0, 44)
-RadiusFrame.Position = UDim2.new(0.5, -135, 0, 298)
+RadiusFrame.Position = UDim2.new(0.5, -135, 0, 366)
 RadiusFrame.BackgroundColor3 = Color3.fromRGB(22, 22, 26)
 RadiusFrame.BorderSizePixel = 0
 RadiusFrame.Parent = Content
@@ -230,16 +234,16 @@ LocalPartsLabel.Parent = RadiusFrame
 
 local TextDivider = Instance.new("Frame")
 TextDivider.Size = UDim2.new(0, 270, 0, 1)
-TextDivider.Position = UDim2.new(0.5, -135, 0, 352)
+TextDivider.Position = UDim2.new(0.5, -135, 0, 420)
 TextDivider.BackgroundColor3 = Color3.fromRGB(38, 38, 44)
 TextDivider.BorderSizePixel = 0
 TextDivider.Parent = Content
 
-makeLabel("SUPER TEXT", 360)
+makeLabel("SUPER TEXT", 428)
 
 local TextBox = Instance.new("TextBox")
 TextBox.Size = UDim2.new(0, 270, 0, 26)
-TextBox.Position = UDim2.new(0.5, -135, 0, 378)
+TextBox.Position = UDim2.new(0.5, -135, 0, 446)
 TextBox.BackgroundColor3 = Color3.fromRGB(22, 22, 26)
 TextBox.Text = "GABS"
 TextBox.PlaceholderText = "Type text..."
@@ -251,11 +255,11 @@ TextBox.ClearTextOnFocus = false
 TextBox.Parent = Content
 Instance.new("UICorner", TextBox).CornerRadius = UDim.new(0, 7)
 
-local TextToggle = makeButton("Super Text  •  Off", 410, Color3.fromRGB(160, 40, 40))
+local TextToggle = makeButton("Super Text  •  Off", 478, Color3.fromRGB(160, 40, 40))
 
 local PixelFrame = Instance.new("Frame")
 PixelFrame.Size = UDim2.new(0, 270, 0, 36)
-PixelFrame.Position = UDim2.new(0.5, -135, 0, 444)
+PixelFrame.Position = UDim2.new(0.5, -135, 0, 512)
 PixelFrame.BackgroundColor3 = Color3.fromRGB(22, 22, 26)
 PixelFrame.BorderSizePixel = 0
 PixelFrame.Parent = Content
@@ -295,16 +299,16 @@ PixelDisplay.Parent = PixelFrame
 
 local Divider = Instance.new("Frame")
 Divider.Size = UDim2.new(0, 270, 0, 1)
-Divider.Position = UDim2.new(0.5, -135, 0, 492)
+Divider.Position = UDim2.new(0.5, -135, 0, 560)
 Divider.BackgroundColor3 = Color3.fromRGB(38, 38, 44)
 Divider.BorderSizePixel = 0
 Divider.Parent = Content
 
-makeLabel("TARGET", 500)
+makeLabel("TARGET", 568)
 
 local NameBox = Instance.new("TextBox")
 NameBox.Size = UDim2.new(0, 270, 0, 26)
-NameBox.Position = UDim2.new(0.5, -135, 0, 518)
+NameBox.Position = UDim2.new(0.5, -135, 0, 586)
 NameBox.BackgroundColor3 = Color3.fromRGB(22, 22, 26)
 NameBox.Text = ""
 NameBox.PlaceholderText = "Player name..."
@@ -316,19 +320,23 @@ NameBox.ClearTextOnFocus = false
 NameBox.Parent = Content
 Instance.new("UICorner", NameBox).CornerRadius = UDim.new(0, 7)
 
-local TargetToggle = makeButton("Target Ring  •  Off", 550, Color3.fromRGB(160, 40, 40))
-local TargetSphereButton = makeHalfButton("Triangle  •  Off", 15, 584, Color3.fromRGB(50, 50, 90))
-local TargetSquareButton = makeHalfButton("Square  •  Off", 155, 584, Color3.fromRGB(65, 45, 100))
-local TargetCubeButton = makeHalfButton("Cube  •  Off", 15, 618, Color3.fromRGB(40, 70, 100))
-local TargetTornadoButton = makeHalfButton("Tornado  •  Off", 155, 618, Color3.fromRGB(90, 45, 45))
-local TargetBallButton = makeHalfButton("Sphere  •  Off", 15, 652, Color3.fromRGB(30, 90, 110))
-local TargetHexButton = makeHalfButton("Hexagon  •  Off", 155, 652, Color3.fromRGB(80, 50, 120))
-local TargetRectButton = makeHalfButton("Rectangle  •  Off", 15, 686, Color3.fromRGB(60, 80, 50))
-local TargetBoxButton = makeHalfButton("Box  •  Off", 155, 686, Color3.fromRGB(90, 60, 40))
+local TargetToggle = makeButton("Target Ring  •  Off", 618, Color3.fromRGB(160, 40, 40))
+local TargetSphereButton = makeHalfButton("Triangle  •  Off", 15, 652, Color3.fromRGB(50, 50, 90))
+local TargetSquareButton = makeHalfButton("Square  •  Off", 155, 652, Color3.fromRGB(65, 45, 100))
+local TargetCubeButton = makeHalfButton("Cube  •  Off", 15, 686, Color3.fromRGB(40, 70, 100))
+local TargetDownConeButton = makeHalfButton("Down Cone  •  Off", 155, 686, Color3.fromRGB(90, 45, 45))
+local TargetBallButton = makeHalfButton("Sphere  •  Off", 15, 720, Color3.fromRGB(30, 90, 110))
+local TargetHexButton = makeHalfButton("Hexagon  •  Off", 155, 720, Color3.fromRGB(80, 50, 120))
+local TargetRectButton = makeHalfButton("Rectangle  •  Off", 15, 754, Color3.fromRGB(60, 80, 50))
+local TargetBoxButton = makeHalfButton("Box  •  Off", 155, 754, Color3.fromRGB(90, 60, 40))
+local TargetPyramidButton = makeHalfButton("Pyramid  •  Off", 15, 788, Color3.fromRGB(100, 70, 40))
+local TargetConeButton = makeHalfButton("Cone  •  Off", 155, 788, Color3.fromRGB(70, 90, 50))
+local TargetOctaButton = makeHalfButton("Octahedron  •  Off", 15, 822, Color3.fromRGB(50, 80, 100))
+local TargetStarButton = makeHalfButton("Star  •  Off", 155, 822, Color3.fromRGB(140, 100, 30))
 
 local TargetRadiusFrame = Instance.new("Frame")
 TargetRadiusFrame.Size = UDim2.new(0, 270, 0, 44)
-TargetRadiusFrame.Position = UDim2.new(0.5, -135, 0, 722)
+TargetRadiusFrame.Position = UDim2.new(0.5, -135, 0, 858)
 TargetRadiusFrame.BackgroundColor3 = Color3.fromRGB(22, 22, 26)
 TargetRadiusFrame.BorderSizePixel = 0
 TargetRadiusFrame.Parent = Content
@@ -378,9 +386,9 @@ TargetPartsLabel.Parent = TargetRadiusFrame
 
 local Watermark = Instance.new("TextLabel")
 Watermark.Size = UDim2.new(1, 0, 0, 14)
-Watermark.Position = UDim2.new(0, 0, 0, 780)
+Watermark.Position = UDim2.new(0, 0, 0, 920)
 Watermark.BackgroundTransparency = 1
-Watermark.Text = "gabs super ring v2.2"
+Watermark.Text = "gabs super ring v2.5"
 Watermark.TextColor3 = Color3.fromRGB(70, 70, 80)
 Watermark.Font = Enum.Font.Gotham
 Watermark.TextSize = 10
@@ -414,7 +422,7 @@ local resizeStart, startSize
 local minimized = false
 local originalSize = MainFrame.Size
 local MIN_WIDTH, MIN_HEIGHT = 260, 180
-local MAX_WIDTH, MAX_HEIGHT = 480, 950
+local MAX_WIDTH, MAX_HEIGHT = 480, 1100
 
 TitleBar.InputBegan:Connect(function(input)
 	if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
@@ -485,16 +493,18 @@ local ringPartsEnabled = false
 local localSphereEnabled = false
 local localSquareEnabled = false
 local localCubeEnabled = false
-local localTornadoEnabled = false
+local localDownConeEnabled = false
 local localBallEnabled = false
 local localHexEnabled = false
 local localRectEnabled = false
 local localBoxEnabled = false
+local localPyramidEnabled = false
+local localConeEnabled = false
+local localOctaEnabled = false
+local localStarEnabled = false
 local freezeEnabled = false
 local smoothMode = true
 
-local cubeSpinSpeed = 0.18
-local sphereSpinSpeed = 0.22
 local shapeSpinSpeed = 0.20
 
 local targetRadius = 50
@@ -502,11 +512,15 @@ local targetRingEnabled = false
 local targetSphereEnabled = false
 local targetSquareEnabled = false
 local targetCubeEnabled = false
-local targetTornadoEnabled = false
+local targetDownConeEnabled = false
 local targetBallEnabled = false
 local targetHexEnabled = false
 local targetRectEnabled = false
 local targetBoxEnabled = false
+local targetPyramidEnabled = false
+local targetConeEnabled = false
+local targetOctaEnabled = false
+local targetStarEnabled = false
 local targetPlayer = nil
 local targetHeight = 100
 local targetRotationSpeed = 0.65
@@ -671,10 +685,10 @@ Workspace.DescendantAdded:Connect(addPart)
 Workspace.DescendantRemoving:Connect(removePart)
 
 local function anyShapeActive()
-	return textEnabled or ringPartsEnabled or localSphereEnabled or localSquareEnabled or localCubeEnabled or localTornadoEnabled or localBallEnabled
-		or localHexEnabled or localRectEnabled or localBoxEnabled
-		or cursorRingEnabled or targetRingEnabled or targetSphereEnabled or targetSquareEnabled or targetCubeEnabled or targetTornadoEnabled or targetBallEnabled
-		or targetHexEnabled or targetRectEnabled or targetBoxEnabled
+	return textEnabled or ringPartsEnabled or localSphereEnabled or localSquareEnabled or localCubeEnabled or localDownConeEnabled or localBallEnabled
+		or localHexEnabled or localRectEnabled or localBoxEnabled or localPyramidEnabled or localConeEnabled or localOctaEnabled or localStarEnabled
+		or cursorRingEnabled or targetRingEnabled or targetSphereEnabled or targetSquareEnabled or targetCubeEnabled or targetDownConeEnabled or targetBallEnabled
+		or targetHexEnabled or targetRectEnabled or targetBoxEnabled or targetPyramidEnabled or targetConeEnabled or targetOctaEnabled or targetStarEnabled
 end
 
 RunService.Heartbeat:Connect(function()
@@ -683,10 +697,10 @@ end)
 
 local function isLocalPart(index, total)
 	if cursorRingEnabled or textEnabled then return true end
-	if not targetRingEnabled and not targetSphereEnabled and not targetSquareEnabled and not targetCubeEnabled and not targetTornadoEnabled and not targetBallEnabled
-		and not targetHexEnabled and not targetRectEnabled and not targetBoxEnabled then return true end
-	if not ringPartsEnabled and not localSphereEnabled and not localSquareEnabled and not localCubeEnabled and not localTornadoEnabled and not localBallEnabled
-		and not localHexEnabled and not localRectEnabled and not localBoxEnabled then return false end
+	if not targetRingEnabled and not targetSphereEnabled and not targetSquareEnabled and not targetCubeEnabled and not targetDownConeEnabled and not targetBallEnabled
+		and not targetHexEnabled and not targetRectEnabled and not targetBoxEnabled and not targetPyramidEnabled and not targetConeEnabled and not targetOctaEnabled and not targetStarEnabled then return true end
+	if not ringPartsEnabled and not localSphereEnabled and not localSquareEnabled and not localCubeEnabled and not localDownConeEnabled and not localBallEnabled
+		and not localHexEnabled and not localRectEnabled and not localBoxEnabled and not localPyramidEnabled and not localConeEnabled and not localOctaEnabled and not localStarEnabled then return false end
 	return index <= math.floor(total * 0.7)
 end
 
@@ -715,7 +729,7 @@ local function applyVelocity(part, targetPos, strength)
 	end
 end
 
--- Cube
+-- ==================== GEOMETRY ====================
 local function getCubeEdges(center, size, angle)
 	local s = size / 2
 	local cosA = math.cos(angle)
@@ -736,7 +750,6 @@ local function getCubeEdges(center, size, angle)
 	}
 end
 
--- Hexagon (6 sides)
 local function getHexEdges(center, radius, angle)
 	local edges = {}
 	for i = 0, 5 do
@@ -749,7 +762,6 @@ local function getHexEdges(center, radius, angle)
 	return edges
 end
 
--- Rectangle (flat)
 local function getRectEdges(center, width, depth, angle)
 	local hw, hd = width / 2, depth / 2
 	local cosA = math.cos(angle)
@@ -766,7 +778,6 @@ local function getRectEdges(center, width, depth, angle)
 	return {{v1,v2},{v2,v3},{v3,v4},{v4,v1}}
 end
 
--- Rectangular Parallelepiped (Box)
 local function getBoxEdges(center, sx, sy, sz, angle)
 	local hx, hy, hz = sx / 2, sy / 2, sz / 2
 	local cosA = math.cos(angle)
@@ -787,21 +798,93 @@ local function getBoxEdges(center, sx, sy, sz, angle)
 	}
 end
 
-local function getTornadoPoints(center, baseRadius, angleOffset)
-	local points = {}
-	local layers = 8
-	local maxHeight = 22
-	for i = 0, layers - 1 do
-		local t = i / (layers - 1)
-		local y = center.Y - maxHeight/2 + t * maxHeight
-		local r = baseRadius * (1.15 - t * 0.85)
-		local count = math.max(5, math.floor(32 * (1 - t * 0.72)))
-		for j = 0, count - 1 do
-			local a = angleOffset + (j / count) * math.pi * 2
-			table.insert(points, Vector3.new(center.X + math.cos(a) * r, y, center.Z + math.sin(a) * r))
-		end
+local function getPyramidEdges(center, size, angle)
+	local s = size / 2
+	local h = size * 0.9
+	local cosA = math.cos(angle)
+	local sinA = math.sin(angle)
+	local function rotate(x, z) return x * cosA - z * sinA, x * sinA + z * cosA end
+	local function make(ox, oy, oz)
+		local rx, rz = rotate(ox, oz)
+		return Vector3.new(center.X + rx, center.Y + oy, center.Z + rz)
 	end
-	return points
+	local base = {
+		make(-s, -h*0.3, -s), make(s, -h*0.3, -s),
+		make(s, -h*0.3, s), make(-s, -h*0.3, s)
+	}
+	local apex = make(0, h*0.7, 0)
+	return {
+		{base[1], base[2]}, {base[2], base[3]}, {base[3], base[4]}, {base[4], base[1]},
+		{base[1], apex}, {base[2], apex}, {base[3], apex}, {base[4], apex}
+	}
+end
+
+local function getOctaEdges(center, size, angle)
+	local s = size * 0.75
+	local cosA = math.cos(angle)
+	local sinA = math.sin(angle)
+	local function rotate(x, z) return x * cosA - z * sinA, x * sinA + z * cosA end
+	local function make(ox, oy, oz)
+		local rx, rz = rotate(ox, oz)
+		return Vector3.new(center.X + rx, center.Y + oy, center.Z + rz)
+	end
+	local top = make(0, s, 0)
+	local bot = make(0, -s, 0)
+	local eq = {
+		make(s, 0, 0), make(0, 0, s),
+		make(-s, 0, 0), make(0, 0, -s)
+	}
+	return {
+		{top, eq[1]}, {top, eq[2]}, {top, eq[3]}, {top, eq[4]},
+		{bot, eq[1]}, {bot, eq[2]}, {bot, eq[3]}, {bot, eq[4]},
+		{eq[1], eq[2]}, {eq[2], eq[3]}, {eq[3], eq[4]}, {eq[4], eq[1]}
+	}
+end
+
+local function getStarEdges(center, radius, angle)
+	local edges = {}
+	local outer = radius
+	local inner = radius * 0.4
+	local points = {}
+	for i = 0, 9 do
+		local a = angle + (i / 10) * math.pi * 2 - math.pi / 2
+		local r = (i % 2 == 0) and outer or inner
+		table.insert(points, Vector3.new(center.X + math.cos(a) * r, center.Y, center.Z + math.sin(a) * r))
+	end
+	for i = 1, 10 do
+		local next = (i % 10) + 1
+		table.insert(edges, {points[i], points[next]})
+	end
+	return edges
+end
+
+-- Cone (point up)
+local function getConeEdges(center, radius, height, angle, upsideDown)
+	local edges = {}
+	local segments = 12
+	local baseY = upsideDown and (center.Y + height * 0.4) or (center.Y - height * 0.4)
+	local apexY = upsideDown and (center.Y - height * 0.5) or (center.Y + height * 0.5)
+	local apex = Vector3.new(center.X, apexY, center.Z)
+
+	local basePoints = {}
+	for i = 0, segments - 1 do
+		local a = angle + (i / segments) * math.pi * 2
+		local p = Vector3.new(center.X + math.cos(a) * radius, baseY, center.Z + math.sin(a) * radius)
+		table.insert(basePoints, p)
+	end
+
+	-- Base circle edges
+	for i = 1, segments do
+		local next = (i % segments) + 1
+		table.insert(edges, {basePoints[i], basePoints[next]})
+	end
+
+	-- Lines from base to apex
+	for i = 1, segments do
+		table.insert(edges, {basePoints[i], apex})
+	end
+
+	return edges
 end
 
 local function getSpherePoints(center, radius, angleOffset)
@@ -873,8 +956,8 @@ RunService.Heartbeat:Connect(function()
 		return
 	end
 
-	if not ringPartsEnabled and not localSphereEnabled and not localSquareEnabled and not localCubeEnabled and not localTornadoEnabled and not localBallEnabled
-		and not localHexEnabled and not localRectEnabled and not localBoxEnabled then
+	if not ringPartsEnabled and not localSphereEnabled and not localSquareEnabled and not localCubeEnabled and not localDownConeEnabled and not localBallEnabled
+		and not localHexEnabled and not localRectEnabled and not localBoxEnabled and not localPyramidEnabled and not localConeEnabled and not localOctaEnabled and not localStarEnabled then
 		LocalPartsLabel.Text = "Parts: 0"
 		return
 	end
@@ -888,7 +971,6 @@ RunService.Heartbeat:Connect(function()
 
 	local baseAngle = freezeEnabled and frozenAngle or (tick() * rotationSpeed * 2)
 	if not freezeEnabled then frozenAngle = baseAngle end
-
 	local spinAngle = freezeEnabled and frozenAngle or (tick() * shapeSpinSpeed)
 
 	local a1, a2, a3 = baseAngle, baseAngle + 2.0944, baseAngle + 4.1888
@@ -908,7 +990,11 @@ RunService.Heartbeat:Connect(function()
 	local hexEdges = getHexEdges(center, r, spinAngle)
 	local rectEdges = getRectEdges(center, r * 2.2, r * 1.1, spinAngle)
 	local boxEdges = getBoxEdges(center, r * 2.4, r * 1.2, r * 1.4, spinAngle)
-	local tornadoPoints = localTornadoEnabled and getTornadoPoints(center, r * 0.95, baseAngle) or {}
+	local pyramidEdges = getPyramidEdges(center, r * 1.9, spinAngle)
+	local coneEdges = getConeEdges(center, r * 0.95, r * 1.6, spinAngle, false)          -- normal cone
+	local downConeEdges = getConeEdges(center, r * 0.95, r * 1.6, spinAngle, true)      -- upside down
+	local octaEdges = getOctaEdges(center, r * 1.5, spinAngle)
+	local starEdges = getStarEdges(center, r, spinAngle)
 	local spherePoints = localBallEnabled and getSpherePoints(center, r * 0.95, spinAngle) or {}
 
 	for i, part in ipairs(parts) do
@@ -919,9 +1005,36 @@ RunService.Heartbeat:Connect(function()
 			if localBallEnabled then
 				local idx = ((triCounter - 1) % #spherePoints) + 1
 				targetPos = spherePoints[idx]
-			elseif localTornadoEnabled then
-				local idx = ((triCounter - 1) % #tornadoPoints) + 1
-				targetPos = tornadoPoints[idx]
+			elseif localDownConeEnabled then
+				local edgeIndex = ((triCounter - 1) % #downConeEdges) + 1
+				local partsPerEdge = math.max(1, math.floor(lastLocalTriCount / #downConeEdges))
+				local idxOnEdge = math.floor((triCounter - 1) / #downConeEdges)
+				local t = (idxOnEdge % partsPerEdge) / partsPerEdge
+				targetPos = downConeEdges[edgeIndex][1]:Lerp(downConeEdges[edgeIndex][2], t)
+			elseif localConeEnabled then
+				local edgeIndex = ((triCounter - 1) % #coneEdges) + 1
+				local partsPerEdge = math.max(1, math.floor(lastLocalTriCount / #coneEdges))
+				local idxOnEdge = math.floor((triCounter - 1) / #coneEdges)
+				local t = (idxOnEdge % partsPerEdge) / partsPerEdge
+				targetPos = coneEdges[edgeIndex][1]:Lerp(coneEdges[edgeIndex][2], t)
+			elseif localStarEnabled then
+				local edgeIndex = ((triCounter - 1) % 10) + 1
+				local partsPerEdge = math.max(1, math.floor(lastLocalTriCount / 10))
+				local idxOnEdge = math.floor((triCounter - 1) / 10)
+				local t = (idxOnEdge % partsPerEdge) / partsPerEdge
+				targetPos = starEdges[edgeIndex][1]:Lerp(starEdges[edgeIndex][2], t)
+			elseif localOctaEnabled then
+				local edgeIndex = ((triCounter - 1) % 12) + 1
+				local partsPerEdge = math.max(1, math.floor(lastLocalTriCount / 12))
+				local idxOnEdge = math.floor((triCounter - 1) / 12)
+				local t = (idxOnEdge % partsPerEdge) / partsPerEdge
+				targetPos = octaEdges[edgeIndex][1]:Lerp(octaEdges[edgeIndex][2], t)
+			elseif localPyramidEnabled then
+				local edgeIndex = ((triCounter - 1) % 8) + 1
+				local partsPerEdge = math.max(1, math.floor(lastLocalTriCount / 8))
+				local idxOnEdge = math.floor((triCounter - 1) / 8)
+				local t = (idxOnEdge % partsPerEdge) / partsPerEdge
+				targetPos = pyramidEdges[edgeIndex][1]:Lerp(pyramidEdges[edgeIndex][2], t)
 			elseif localBoxEnabled then
 				local edgeIndex = ((triCounter - 1) % 12) + 1
 				local partsPerEdge = math.max(1, math.floor(lastLocalTriCount / 12))
@@ -959,7 +1072,6 @@ RunService.Heartbeat:Connect(function()
 				local t = (idxOnEdge % partsPerEdge) / partsPerEdge
 				targetPos = squareEdges[edgeIndex][1]:Lerp(squareEdges[edgeIndex][2], t)
 			else
-				-- Old strong circle ring
 				local pos = part.Position
 				local angle = math.atan2(pos.Z - center.Z, pos.X - center.X)
 				local newAngle = freezeEnabled and angle or (angle + math.rad(rotationSpeed))
@@ -971,8 +1083,8 @@ RunService.Heartbeat:Connect(function()
 				)
 			end
 
-			if not localSphereEnabled and not localSquareEnabled and not localCubeEnabled and not localTornadoEnabled and not localBallEnabled
-				and not localHexEnabled and not localRectEnabled and not localBoxEnabled then
+			if not localSphereEnabled and not localSquareEnabled and not localCubeEnabled and not localDownConeEnabled and not localBallEnabled
+				and not localHexEnabled and not localRectEnabled and not localBoxEnabled and not localPyramidEnabled and not localConeEnabled and not localOctaEnabled and not localStarEnabled then
 				local dir = targetPos - part.Position
 				if dir.Magnitude > 0.01 then
 					part.Velocity = dir.Unit * attractionStrength
@@ -988,12 +1100,12 @@ RunService.Heartbeat:Connect(function()
 	LocalPartsLabel.Text = "Parts: " .. localPartsCount
 end)
 
--- TARGET HEARTBEAT (same structure)
+-- TARGET HEARTBEAT
 RunService.Heartbeat:Connect(function()
 	targetPartsCount = 0
 	if cursorRingEnabled or textEnabled then return end
-	if (not targetRingEnabled and not targetSphereEnabled and not targetSquareEnabled and not targetCubeEnabled and not targetTornadoEnabled and not targetBallEnabled
-		and not targetHexEnabled and not targetRectEnabled and not targetBoxEnabled) or not targetPlayer then
+	if (not targetRingEnabled and not targetSphereEnabled and not targetSquareEnabled and not targetCubeEnabled and not targetDownConeEnabled and not targetBallEnabled
+		and not targetHexEnabled and not targetRectEnabled and not targetBoxEnabled and not targetPyramidEnabled and not targetConeEnabled and not targetOctaEnabled and not targetStarEnabled) or not targetPlayer then
 		TargetPartsLabel.Text = "Parts: 0"
 		return
 	end
@@ -1028,7 +1140,11 @@ RunService.Heartbeat:Connect(function()
 	local hexEdges = getHexEdges(center, r, spinAngle)
 	local rectEdges = getRectEdges(center, r * 2.2, r * 1.1, spinAngle)
 	local boxEdges = getBoxEdges(center, r * 2.4, r * 1.2, r * 1.4, spinAngle)
-	local tornadoPoints = targetTornadoEnabled and getTornadoPoints(center, r * 0.95, baseAngle) or {}
+	local pyramidEdges = getPyramidEdges(center, r * 1.9, spinAngle)
+	local coneEdges = getConeEdges(center, r * 0.95, r * 1.6, spinAngle, false)
+	local downConeEdges = getConeEdges(center, r * 0.95, r * 1.6, spinAngle, true)
+	local octaEdges = getOctaEdges(center, r * 1.5, spinAngle)
+	local starEdges = getStarEdges(center, r, spinAngle)
 	local spherePoints = targetBallEnabled and getSpherePoints(center, r * 0.95, spinAngle) or {}
 
 	for i, part in ipairs(parts) do
@@ -1040,9 +1156,36 @@ RunService.Heartbeat:Connect(function()
 			if targetBallEnabled then
 				local idx = ((triCounter - 1) % #spherePoints) + 1
 				targetPos = spherePoints[idx]
-			elseif targetTornadoEnabled then
-				local idx = ((triCounter - 1) % #tornadoPoints) + 1
-				targetPos = tornadoPoints[idx]
+			elseif targetDownConeEnabled then
+				local edgeIndex = ((triCounter - 1) % #downConeEdges) + 1
+				local partsPerEdge = math.max(1, math.floor(lastTargetTriCount / #downConeEdges))
+				local idxOnEdge = math.floor((triCounter - 1) / #downConeEdges)
+				local t = (idxOnEdge % partsPerEdge) / partsPerEdge
+				targetPos = downConeEdges[edgeIndex][1]:Lerp(downConeEdges[edgeIndex][2], t)
+			elseif targetConeEnabled then
+				local edgeIndex = ((triCounter - 1) % #coneEdges) + 1
+				local partsPerEdge = math.max(1, math.floor(lastTargetTriCount / #coneEdges))
+				local idxOnEdge = math.floor((triCounter - 1) / #coneEdges)
+				local t = (idxOnEdge % partsPerEdge) / partsPerEdge
+				targetPos = coneEdges[edgeIndex][1]:Lerp(coneEdges[edgeIndex][2], t)
+			elseif targetStarEnabled then
+				local edgeIndex = ((triCounter - 1) % 10) + 1
+				local partsPerEdge = math.max(1, math.floor(lastTargetTriCount / 10))
+				local idxOnEdge = math.floor((triCounter - 1) / 10)
+				local t = (idxOnEdge % partsPerEdge) / partsPerEdge
+				targetPos = starEdges[edgeIndex][1]:Lerp(starEdges[edgeIndex][2], t)
+			elseif targetOctaEnabled then
+				local edgeIndex = ((triCounter - 1) % 12) + 1
+				local partsPerEdge = math.max(1, math.floor(lastTargetTriCount / 12))
+				local idxOnEdge = math.floor((triCounter - 1) / 12)
+				local t = (idxOnEdge % partsPerEdge) / partsPerEdge
+				targetPos = octaEdges[edgeIndex][1]:Lerp(octaEdges[edgeIndex][2], t)
+			elseif targetPyramidEnabled then
+				local edgeIndex = ((triCounter - 1) % 8) + 1
+				local partsPerEdge = math.max(1, math.floor(lastTargetTriCount / 8))
+				local idxOnEdge = math.floor((triCounter - 1) / 8)
+				local t = (idxOnEdge % partsPerEdge) / partsPerEdge
+				targetPos = pyramidEdges[edgeIndex][1]:Lerp(pyramidEdges[edgeIndex][2], t)
 			elseif targetBoxEnabled then
 				local edgeIndex = ((triCounter - 1) % 12) + 1
 				local partsPerEdge = math.max(1, math.floor(lastTargetTriCount / 12))
@@ -1091,8 +1234,8 @@ RunService.Heartbeat:Connect(function()
 				)
 			end
 
-			if not targetSphereEnabled and not targetSquareEnabled and not targetCubeEnabled and not targetTornadoEnabled and not targetBallEnabled
-				and not targetHexEnabled and not targetRectEnabled and not targetBoxEnabled then
+			if not targetSphereEnabled and not targetSquareEnabled and not targetCubeEnabled and not targetDownConeEnabled and not targetBallEnabled
+				and not targetHexEnabled and not targetRectEnabled and not targetBoxEnabled and not targetPyramidEnabled and not targetConeEnabled and not targetOctaEnabled and not targetStarEnabled then
 				local dir = targetPos - part.Position
 				if dir.Magnitude > 0.01 then
 					part.Velocity = dir.Unit * targetAttractionStrength
@@ -1114,11 +1257,15 @@ local function turnOffLocalShapes()
 	localSphereEnabled = false
 	localSquareEnabled = false
 	localCubeEnabled = false
-	localTornadoEnabled = false
+	localDownConeEnabled = false
 	localBallEnabled = false
 	localHexEnabled = false
 	localRectEnabled = false
 	localBoxEnabled = false
+	localPyramidEnabled = false
+	localConeEnabled = false
+	localOctaEnabled = false
+	localStarEnabled = false
 	cursorRingEnabled = false
 
 	ToggleButton.Text = "Your Ring  •  Off"
@@ -1129,8 +1276,8 @@ local function turnOffLocalShapes()
 	LocalSquareButton.BackgroundColor3 = Color3.fromRGB(65, 45, 100)
 	LocalCubeButton.Text = "Cube  •  Off"
 	LocalCubeButton.BackgroundColor3 = Color3.fromRGB(40, 70, 100)
-	LocalTornadoButton.Text = "Tornado  •  Off"
-	LocalTornadoButton.BackgroundColor3 = Color3.fromRGB(90, 45, 45)
+	LocalDownConeButton.Text = "Down Cone  •  Off"
+	LocalDownConeButton.BackgroundColor3 = Color3.fromRGB(90, 45, 45)
 	LocalBallButton.Text = "Sphere  •  Off"
 	LocalBallButton.BackgroundColor3 = Color3.fromRGB(30, 90, 110)
 	LocalHexButton.Text = "Hexagon  •  Off"
@@ -1139,11 +1286,61 @@ local function turnOffLocalShapes()
 	LocalRectButton.BackgroundColor3 = Color3.fromRGB(60, 80, 50)
 	LocalBoxButton.Text = "Box  •  Off"
 	LocalBoxButton.BackgroundColor3 = Color3.fromRGB(90, 60, 40)
+	LocalPyramidButton.Text = "Pyramid  •  Off"
+	LocalPyramidButton.BackgroundColor3 = Color3.fromRGB(100, 70, 40)
+	LocalConeButton.Text = "Cone  •  Off"
+	LocalConeButton.BackgroundColor3 = Color3.fromRGB(70, 90, 50)
+	LocalOctaButton.Text = "Octahedron  •  Off"
+	LocalOctaButton.BackgroundColor3 = Color3.fromRGB(50, 80, 100)
+	LocalStarButton.Text = "Star  •  Off"
+	LocalStarButton.BackgroundColor3 = Color3.fromRGB(140, 100, 30)
 	CursorButton.Text = "Cursor Follow  •  Off"
 	CursorButton.BackgroundColor3 = Color3.fromRGB(160, 40, 40)
 end
 
--- Speed Mode
+local function turnOffTargetShapes()
+	targetRingEnabled = false
+	targetSphereEnabled = false
+	targetSquareEnabled = false
+	targetCubeEnabled = false
+	targetDownConeEnabled = false
+	targetBallEnabled = false
+	targetHexEnabled = false
+	targetRectEnabled = false
+	targetBoxEnabled = false
+	targetPyramidEnabled = false
+	targetConeEnabled = false
+	targetOctaEnabled = false
+	targetStarEnabled = false
+
+	TargetToggle.Text = "Target Ring  •  Off"
+	TargetToggle.BackgroundColor3 = Color3.fromRGB(160, 40, 40)
+	TargetSphereButton.Text = "Triangle  •  Off"
+	TargetSphereButton.BackgroundColor3 = Color3.fromRGB(50, 50, 90)
+	TargetSquareButton.Text = "Square  •  Off"
+	TargetSquareButton.BackgroundColor3 = Color3.fromRGB(65, 45, 100)
+	TargetCubeButton.Text = "Cube  •  Off"
+	TargetCubeButton.BackgroundColor3 = Color3.fromRGB(40, 70, 100)
+	TargetDownConeButton.Text = "Down Cone  •  Off"
+	TargetDownConeButton.BackgroundColor3 = Color3.fromRGB(90, 45, 45)
+	TargetBallButton.Text = "Sphere  •  Off"
+	TargetBallButton.BackgroundColor3 = Color3.fromRGB(30, 90, 110)
+	TargetHexButton.Text = "Hexagon  •  Off"
+	TargetHexButton.BackgroundColor3 = Color3.fromRGB(80, 50, 120)
+	TargetRectButton.Text = "Rectangle  •  Off"
+	TargetRectButton.BackgroundColor3 = Color3.fromRGB(60, 80, 50)
+	TargetBoxButton.Text = "Box  •  Off"
+	TargetBoxButton.BackgroundColor3 = Color3.fromRGB(90, 60, 40)
+	TargetPyramidButton.Text = "Pyramid  •  Off"
+	TargetPyramidButton.BackgroundColor3 = Color3.fromRGB(100, 70, 40)
+	TargetConeButton.Text = "Cone  •  Off"
+	TargetConeButton.BackgroundColor3 = Color3.fromRGB(70, 90, 50)
+	TargetOctaButton.Text = "Octahedron  •  Off"
+	TargetOctaButton.BackgroundColor3 = Color3.fromRGB(50, 80, 100)
+	TargetStarButton.Text = "Star  •  Off"
+	TargetStarButton.BackgroundColor3 = Color3.fromRGB(140, 100, 30)
+end
+
 SpeedModeButton.MouseButton1Click:Connect(function()
 	smoothMode = not smoothMode
 	if smoothMode then
@@ -1191,22 +1388,17 @@ end)
 
 ToggleButton.MouseButton1Click:Connect(function()
 	if cursorRingEnabled or textEnabled then return end
-	ringPartsEnabled = not ringPartsEnabled
 	if ringPartsEnabled then
-		ToggleButton.Text = "Your Ring  •  On"
-		ToggleButton.BackgroundColor3 = Color3.fromRGB(40, 140, 70)
+		turnOffLocalShapes()
+	else
 		turnOffLocalShapes()
 		ringPartsEnabled = true
 		ToggleButton.Text = "Your Ring  •  On"
 		ToggleButton.BackgroundColor3 = Color3.fromRGB(40, 140, 70)
-	else
-		ToggleButton.Text = "Your Ring  •  Off"
-		ToggleButton.BackgroundColor3 = Color3.fromRGB(160, 40, 40)
 	end
 	playSound("12221967")
 end)
 
--- Shape buttons (Local)
 local function setLocalShape(shape)
 	turnOffLocalShapes()
 	ringPartsEnabled = true
@@ -1225,10 +1417,10 @@ local function setLocalShape(shape)
 		localCubeEnabled = true
 		LocalCubeButton.Text = "Cube  •  On"
 		LocalCubeButton.BackgroundColor3 = Color3.fromRGB(50, 110, 160)
-	elseif shape == "tornado" then
-		localTornadoEnabled = true
-		LocalTornadoButton.Text = "Tornado  •  On"
-		LocalTornadoButton.BackgroundColor3 = Color3.fromRGB(160, 60, 50)
+	elseif shape == "downcone" then
+		localDownConeEnabled = true
+		LocalDownConeButton.Text = "Down Cone  •  On"
+		LocalDownConeButton.BackgroundColor3 = Color3.fromRGB(160, 60, 50)
 	elseif shape == "sphere" then
 		localBallEnabled = true
 		LocalBallButton.Text = "Sphere  •  On"
@@ -1245,6 +1437,22 @@ local function setLocalShape(shape)
 		localBoxEnabled = true
 		LocalBoxButton.Text = "Box  •  On"
 		LocalBoxButton.BackgroundColor3 = Color3.fromRGB(150, 90, 50)
+	elseif shape == "pyramid" then
+		localPyramidEnabled = true
+		LocalPyramidButton.Text = "Pyramid  •  On"
+		LocalPyramidButton.BackgroundColor3 = Color3.fromRGB(160, 110, 50)
+	elseif shape == "cone" then
+		localConeEnabled = true
+		LocalConeButton.Text = "Cone  •  On"
+		LocalConeButton.BackgroundColor3 = Color3.fromRGB(100, 140, 70)
+	elseif shape == "octa" then
+		localOctaEnabled = true
+		LocalOctaButton.Text = "Octahedron  •  On"
+		LocalOctaButton.BackgroundColor3 = Color3.fromRGB(70, 120, 150)
+	elseif shape == "star" then
+		localStarEnabled = true
+		LocalStarButton.Text = "Star  •  On"
+		LocalStarButton.BackgroundColor3 = Color3.fromRGB(200, 150, 40)
 	end
 end
 
@@ -1263,9 +1471,9 @@ LocalCubeButton.MouseButton1Click:Connect(function()
 	if localCubeEnabled then turnOffLocalShapes() else setLocalShape("cube") end
 	playSound("12221967")
 end)
-LocalTornadoButton.MouseButton1Click:Connect(function()
+LocalDownConeButton.MouseButton1Click:Connect(function()
 	if cursorRingEnabled or textEnabled then return end
-	if localTornadoEnabled then turnOffLocalShapes() else setLocalShape("tornado") end
+	if localDownConeEnabled then turnOffLocalShapes() else setLocalShape("downcone") end
 	playSound("12221967")
 end)
 LocalBallButton.MouseButton1Click:Connect(function()
@@ -1286,6 +1494,26 @@ end)
 LocalBoxButton.MouseButton1Click:Connect(function()
 	if cursorRingEnabled or textEnabled then return end
 	if localBoxEnabled then turnOffLocalShapes() else setLocalShape("box") end
+	playSound("12221967")
+end)
+LocalPyramidButton.MouseButton1Click:Connect(function()
+	if cursorRingEnabled or textEnabled then return end
+	if localPyramidEnabled then turnOffLocalShapes() else setLocalShape("pyramid") end
+	playSound("12221967")
+end)
+LocalConeButton.MouseButton1Click:Connect(function()
+	if cursorRingEnabled or textEnabled then return end
+	if localConeEnabled then turnOffLocalShapes() else setLocalShape("cone") end
+	playSound("12221967")
+end)
+LocalOctaButton.MouseButton1Click:Connect(function()
+	if cursorRingEnabled or textEnabled then return end
+	if localOctaEnabled then turnOffLocalShapes() else setLocalShape("octa") end
+	playSound("12221967")
+end)
+LocalStarButton.MouseButton1Click:Connect(function()
+	if cursorRingEnabled or textEnabled then return end
+	if localStarEnabled then turnOffLocalShapes() else setLocalShape("star") end
 	playSound("12221967")
 end)
 
@@ -1341,7 +1569,6 @@ local function findPlayer(name)
 	return nil
 end
 
--- Target buttons (simplified for length)
 TargetToggle.MouseButton1Click:Connect(function()
 	local found = targetPlayer or findPlayer(NameBox.Text)
 	if not found then
@@ -1349,21 +1576,128 @@ TargetToggle.MouseButton1Click:Connect(function()
 		return
 	end
 	targetPlayer = found
-	targetRingEnabled = not targetRingEnabled
 	if targetRingEnabled then
+		turnOffTargetShapes()
+	else
+		turnOffTargetShapes()
+		targetRingEnabled = true
 		TargetToggle.Text = "Target Ring  •  On"
 		TargetToggle.BackgroundColor3 = Color3.fromRGB(40, 140, 70)
-	else
-		TargetToggle.Text = "Target Ring  •  Off"
-		TargetToggle.BackgroundColor3 = Color3.fromRGB(160, 40, 40)
-		targetPlayer = nil
 	end
 	playSound("12221967")
 end)
 
--- (Target shape buttons follow the same pattern as Local – they toggle the corresponding target*Enabled flags)
--- For brevity in this response I’m keeping the structure consistent with previous versions.
--- You already have the full pattern from earlier messages.
+local function setTargetShape(shape)
+	local found = targetPlayer or findPlayer(NameBox.Text)
+	if not found then
+		StarterGui:SetCore("SendNotification", {Title="Target", Text="Player not found!", Duration=3})
+		return
+	end
+	targetPlayer = found
+	turnOffTargetShapes()
+	targetRingEnabled = true
+	TargetToggle.Text = "Target Ring  •  On"
+	TargetToggle.BackgroundColor3 = Color3.fromRGB(40, 140, 70)
+
+	if shape == "triangle" then
+		targetSphereEnabled = true
+		TargetSphereButton.Text = "Triangle  •  On"
+		TargetSphereButton.BackgroundColor3 = Color3.fromRGB(70, 70, 160)
+	elseif shape == "square" then
+		targetSquareEnabled = true
+		TargetSquareButton.Text = "Square  •  On"
+		TargetSquareButton.BackgroundColor3 = Color3.fromRGB(100, 60, 170)
+	elseif shape == "cube" then
+		targetCubeEnabled = true
+		TargetCubeButton.Text = "Cube  •  On"
+		TargetCubeButton.BackgroundColor3 = Color3.fromRGB(50, 110, 160)
+	elseif shape == "downcone" then
+		targetDownConeEnabled = true
+		TargetDownConeButton.Text = "Down Cone  •  On"
+		TargetDownConeButton.BackgroundColor3 = Color3.fromRGB(160, 60, 50)
+	elseif shape == "sphere" then
+		targetBallEnabled = true
+		TargetBallButton.Text = "Sphere  •  On"
+		TargetBallButton.BackgroundColor3 = Color3.fromRGB(40, 140, 160)
+	elseif shape == "hex" then
+		targetHexEnabled = true
+		TargetHexButton.Text = "Hexagon  •  On"
+		TargetHexButton.BackgroundColor3 = Color3.fromRGB(130, 70, 180)
+	elseif shape == "rect" then
+		targetRectEnabled = true
+		TargetRectButton.Text = "Rectangle  •  On"
+		TargetRectButton.BackgroundColor3 = Color3.fromRGB(80, 130, 70)
+	elseif shape == "box" then
+		targetBoxEnabled = true
+		TargetBoxButton.Text = "Box  •  On"
+		TargetBoxButton.BackgroundColor3 = Color3.fromRGB(150, 90, 50)
+	elseif shape == "pyramid" then
+		targetPyramidEnabled = true
+		TargetPyramidButton.Text = "Pyramid  •  On"
+		TargetPyramidButton.BackgroundColor3 = Color3.fromRGB(160, 110, 50)
+	elseif shape == "cone" then
+		targetConeEnabled = true
+		TargetConeButton.Text = "Cone  •  On"
+		TargetConeButton.BackgroundColor3 = Color3.fromRGB(100, 140, 70)
+	elseif shape == "octa" then
+		targetOctaEnabled = true
+		TargetOctaButton.Text = "Octahedron  •  On"
+		TargetOctaButton.BackgroundColor3 = Color3.fromRGB(70, 120, 150)
+	elseif shape == "star" then
+		targetStarEnabled = true
+		TargetStarButton.Text = "Star  •  On"
+		TargetStarButton.BackgroundColor3 = Color3.fromRGB(200, 150, 40)
+	end
+end
+
+TargetSphereButton.MouseButton1Click:Connect(function()
+	if targetSphereEnabled then turnOffTargetShapes() else setTargetShape("triangle") end
+	playSound("12221967")
+end)
+TargetSquareButton.MouseButton1Click:Connect(function()
+	if targetSquareEnabled then turnOffTargetShapes() else setTargetShape("square") end
+	playSound("12221967")
+end)
+TargetCubeButton.MouseButton1Click:Connect(function()
+	if targetCubeEnabled then turnOffTargetShapes() else setTargetShape("cube") end
+	playSound("12221967")
+end)
+TargetDownConeButton.MouseButton1Click:Connect(function()
+	if targetDownConeEnabled then turnOffTargetShapes() else setTargetShape("downcone") end
+	playSound("12221967")
+end)
+TargetBallButton.MouseButton1Click:Connect(function()
+	if targetBallEnabled then turnOffTargetShapes() else setTargetShape("sphere") end
+	playSound("12221967")
+end)
+TargetHexButton.MouseButton1Click:Connect(function()
+	if targetHexEnabled then turnOffTargetShapes() else setTargetShape("hex") end
+	playSound("12221967")
+end)
+TargetRectButton.MouseButton1Click:Connect(function()
+	if targetRectEnabled then turnOffTargetShapes() else setTargetShape("rect") end
+	playSound("12221967")
+end)
+TargetBoxButton.MouseButton1Click:Connect(function()
+	if targetBoxEnabled then turnOffTargetShapes() else setTargetShape("box") end
+	playSound("12221967")
+end)
+TargetPyramidButton.MouseButton1Click:Connect(function()
+	if targetPyramidEnabled then turnOffTargetShapes() else setTargetShape("pyramid") end
+	playSound("12221967")
+end)
+TargetConeButton.MouseButton1Click:Connect(function()
+	if targetConeEnabled then turnOffTargetShapes() else setTargetShape("cone") end
+	playSound("12221967")
+end)
+TargetOctaButton.MouseButton1Click:Connect(function()
+	if targetOctaEnabled then turnOffTargetShapes() else setTargetShape("octa") end
+	playSound("12221967")
+end)
+TargetStarButton.MouseButton1Click:Connect(function()
+	if targetStarEnabled then turnOffTargetShapes() else setTargetShape("star") end
+	playSound("12221967")
+end)
 
 TargetDecrease.MouseButton1Click:Connect(function()
 	targetRadius = math.max(0, targetRadius - 5)
@@ -1380,8 +1714,8 @@ pcall(function()
 	local userId = Players:GetUserIdFromNameAsync("Gabrieltod112")
 	local content = Players:GetUserThumbnailAsync(userId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size420x420)
 	StarterGui:SetCore("SendNotification", {
-		Title = "gabs super ring v2.2",
-		Text = "Hexagon + Rectangle + Box added!",
+		Title = "gabs super ring v2.5",
+		Text = "Tetra removed • Cone + Down Cone added!",
 		Icon = content,
 		Duration = 5
 	})
