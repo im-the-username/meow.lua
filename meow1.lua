@@ -3322,8 +3322,8 @@ pcall(function()
 	local userId = Players:GetUserIdFromNameAsync("Gabrieltod112")
 	local thumb = Players:GetUserThumbnailAsync(userId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size420x420)
 	StarterGui:SetCore("SendNotification", {
-		Title = "gabs super ring :3 v2.9",
-		Text = "Player list · Auto · Multi(broken a bit) · Spectate · RShift UI",
+		Title = "gabs super ring v2.9",
+		Text = "Player list · Auto · Multi · Spectate · RShift UI",
 		Icon = thumb,
 		Duration = 5
 	})
