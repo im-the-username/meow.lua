@@ -30,12 +30,16 @@ if not getgenv().Network then
 		end
 	end
 	RunService.Heartbeat:Connect(function()
-		sethiddenproperty(LocalPlayer, "SimulationRadius", math.huge)
+		pcall(function()
+			sethiddenproperty(LocalPlayer, "SimulationRadius", math.huge)
+		end)
 		LocalPlayer.ReplicationFocus = Workspace
+		-- Always pulse retained parts slightly harder when network active
 		if not Network.Active then return end
 		for _, p in pairs(Network.BaseParts) do
-			if p:IsDescendantOf(Workspace) then
+			if p and p.Parent and p:IsDescendantOf(Workspace) then
 				p.Velocity = Network.Velocity
+				pcall(function() p.AssemblyLinearVelocity = Network.Velocity end)
 			end
 		end
 	end)
@@ -121,19 +125,11 @@ CloseBtn.MouseButton1Click:Connect(function()
 	ScreenGui:Destroy()
 end)
 
-local minimized = false
-local originalSize = Main.Size
-MinimizeBtn.MouseButton1Click:Connect(function()
-	minimized = not minimized
-	if minimized then
-		Main:TweenSize(UDim2.new(0, 540, 0, 38), "Out", "Quad", 0.22, true)
-		MinimizeBtn.Text = "+"
-	else
-		Main:TweenSize(originalSize, "Out", "Quad", 0.22, true)
-		MinimizeBtn.Text = "−"
-	end
-	playSound("12221967")
-end)
+-- Minimize wired after full UI is built (see setMinimized below)
+TitleBar.ZIndex = 20
+MinimizeBtn.ZIndex = 21
+CloseBtn.ZIndex = 21
+Title.ZIndex = 21
 
 local TabFrame = Instance.new("Frame")
 TabFrame.Size = UDim2.new(0, 110, 1, -90)
@@ -391,11 +387,44 @@ ZKnob.Parent = ZSliderBg
 Instance.new("UICorner", ZKnob).CornerRadius = UDim.new(0, 4)
 
 -- Keep it stuck to the right side
+local minimized = false
+local originalSize = UDim2.new(0, 540, 0, 420)
+
 local function updateOffsetPanelPos()
 	OffsetPanel.Position = UDim2.new(1, 8, 0, 45)
-	OffsetPanel.Visible = true
+	if not minimized then
+		OffsetPanel.Visible = true
+	end
 end
 updateOffsetPanelPos()
+
+function setMinimized(state)
+	minimized = state and true or false
+	if minimized then
+		TabFrame.Visible = false
+		Content.Visible = false
+		BottomBar.Visible = false
+		OffsetPanel.Visible = false
+		Main.ClipsDescendants = true
+		Main.Size = UDim2.new(0, 540, 0, 38)
+		MinimizeBtn.Text = "+"
+	else
+		Main.Size = originalSize
+		Main.ClipsDescendants = false
+		TabFrame.Visible = true
+		Content.Visible = true
+		BottomBar.Visible = true
+		OffsetPanel.Visible = true
+		OffsetPanel.Position = UDim2.new(1, 8, 0, 45)
+		MinimizeBtn.Text = "−"
+	end
+end
+
+MinimizeBtn.MouseButton1Click:Connect(function()
+	setMinimized(not minimized)
+	playSound("12221967")
+end)
+
 
 -- ==================== PAGE BUTTONS ====================
 local function makeBtn(parent, text, y, color)
@@ -531,29 +560,58 @@ NameBox.ClearTextOnFocus = false
 NameBox.Parent = TargetPage
 Instance.new("UICorner", NameBox).CornerRadius = UDim.new(0, 6)
 
-local TargetToggle = makeBtn(TargetPage, "Target Ring  •  Off", 62, Color3.fromRGB(160, 40, 40))
+local PlayersListBtn = makeHalfBtn(TargetPage, "Players list  ▼", 8, 58, Color3.fromRGB(45, 70, 120))
+local RefreshPlayersBtn = makeHalfBtn(TargetPage, "Refresh", 200, 58, Color3.fromRGB(50, 50, 60))
 
-makeLabel(TargetPage, "TARGET SHAPES", 102)
-local TargetSphereButton = makeHalfBtn(TargetPage, "Triangle  •  Off", 8, 124, Color3.fromRGB(50, 50, 90))
-local TargetSquareButton = makeHalfBtn(TargetPage, "Square  •  Off", 200, 124, Color3.fromRGB(65, 45, 100))
-local TargetCubeButton = makeHalfBtn(TargetPage, "Cube  •  Off", 8, 158, Color3.fromRGB(40, 70, 100))
-local TargetDownConeButton = makeHalfBtn(TargetPage, "Down Cone  •  Off", 200, 158, Color3.fromRGB(90, 45, 45))
-local TargetBallButton = makeHalfBtn(TargetPage, "Sphere  •  Off", 8, 192, Color3.fromRGB(30, 90, 110))
-local TargetHexButton = makeHalfBtn(TargetPage, "Hexagon  •  Off", 200, 192, Color3.fromRGB(80, 50, 120))
-local TargetRectButton = makeHalfBtn(TargetPage, "Rectangle  •  Off", 8, 226, Color3.fromRGB(60, 80, 50))
-local TargetBoxButton = makeHalfBtn(TargetPage, "Box  •  Off", 200, 226, Color3.fromRGB(90, 60, 40))
-local TargetPyramidButton = makeHalfBtn(TargetPage, "Pyramid  •  Off", 8, 260, Color3.fromRGB(100, 70, 40))
-local TargetConeButton = makeHalfBtn(TargetPage, "Cone  •  Off", 200, 260, Color3.fromRGB(70, 90, 50))
-local TargetOctaButton = makeHalfBtn(TargetPage, "Octahedron  •  Off", 8, 294, Color3.fromRGB(50, 80, 100))
-local TargetStarButton = makeHalfBtn(TargetPage, "Star  •  Off", 200, 294, Color3.fromRGB(140, 100, 30))
-local TargetPentagonButton = makeHalfBtn(TargetPage, "Pentagon  •  Off", 8, 328, Color3.fromRGB(90, 60, 110))
-local TargetOctagonButton = makeHalfBtn(TargetPage, "Octagon  •  Off", 200, 328, Color3.fromRGB(60, 90, 80))
-local TargetDiamondButton = makeHalfBtn(TargetPage, "Diamond  •  Off", 8, 362, Color3.fromRGB(100, 50, 80))
-local TargetCrossButton = makeHalfBtn(TargetPage, "Cross  •  Off", 200, 362, Color3.fromRGB(80, 80, 50))
+local PlayerListFrame = Instance.new("ScrollingFrame")
+PlayerListFrame.Name = "PlayerList"
+PlayerListFrame.Size = UDim2.new(1, -12, 0, 110)
+PlayerListFrame.Position = UDim2.new(0, 6, 0, 90)
+PlayerListFrame.BackgroundColor3 = Color3.fromRGB(22, 22, 28)
+PlayerListFrame.BorderSizePixel = 0
+PlayerListFrame.ScrollBarThickness = 4
+PlayerListFrame.ScrollBarImageColor3 = Color3.fromRGB(80, 80, 100)
+PlayerListFrame.Visible = false
+PlayerListFrame.ZIndex = 20
+PlayerListFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
+PlayerListFrame.Parent = TargetPage
+Instance.new("UICorner", PlayerListFrame).CornerRadius = UDim.new(0, 6)
+local PlayerListLayout = Instance.new("UIListLayout")
+PlayerListLayout.Padding = UDim.new(0, 4)
+PlayerListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+PlayerListLayout.Parent = PlayerListFrame
+local PlayerListPad = Instance.new("UIPadding")
+PlayerListPad.PaddingTop = UDim.new(0, 4)
+PlayerListPad.PaddingLeft = UDim.new(0, 4)
+PlayerListPad.PaddingRight = UDim.new(0, 4)
+PlayerListPad.Parent = PlayerListFrame
+
+local TargetToggle = makeBtn(TargetPage, "Target Ring  •  Off", 90, Color3.fromRGB(160, 40, 40))
+local AutoTargetBtn = makeBtn(TargetPage, "Auto nearest  •  Off", 124, Color3.fromRGB(50, 50, 60))
+local MultiTargetBtn = makeHalfBtn(TargetPage, "Multi (0/3)  •  Off", 8, 158, Color3.fromRGB(50, 50, 60))
+local SpectateBtn = makeHalfBtn(TargetPage, "Spectate  •  Off", 200, 158, Color3.fromRGB(50, 50, 60))
+
+makeLabel(TargetPage, "TARGET SHAPES", 196)
+local TargetSphereButton = makeHalfBtn(TargetPage, "Triangle  •  Off", 8, 218, Color3.fromRGB(50, 50, 90))
+local TargetSquareButton = makeHalfBtn(TargetPage, "Square  •  Off", 200, 218, Color3.fromRGB(65, 45, 100))
+local TargetCubeButton = makeHalfBtn(TargetPage, "Cube  •  Off", 8, 252, Color3.fromRGB(40, 70, 100))
+local TargetDownConeButton = makeHalfBtn(TargetPage, "Down Cone  •  Off", 200, 252, Color3.fromRGB(90, 45, 45))
+local TargetBallButton = makeHalfBtn(TargetPage, "Sphere  •  Off", 8, 286, Color3.fromRGB(30, 90, 110))
+local TargetHexButton = makeHalfBtn(TargetPage, "Hexagon  •  Off", 200, 286, Color3.fromRGB(80, 50, 120))
+local TargetRectButton = makeHalfBtn(TargetPage, "Rectangle  •  Off", 8, 320, Color3.fromRGB(60, 80, 50))
+local TargetBoxButton = makeHalfBtn(TargetPage, "Box  •  Off", 200, 320, Color3.fromRGB(90, 60, 40))
+local TargetPyramidButton = makeHalfBtn(TargetPage, "Pyramid  •  Off", 8, 354, Color3.fromRGB(100, 70, 40))
+local TargetConeButton = makeHalfBtn(TargetPage, "Cone  •  Off", 200, 354, Color3.fromRGB(70, 90, 50))
+local TargetOctaButton = makeHalfBtn(TargetPage, "Octahedron  •  Off", 8, 388, Color3.fromRGB(50, 80, 100))
+local TargetStarButton = makeHalfBtn(TargetPage, "Star  •  Off", 200, 388, Color3.fromRGB(140, 100, 30))
+local TargetPentagonButton = makeHalfBtn(TargetPage, "Pentagon  •  Off", 8, 422, Color3.fromRGB(90, 60, 110))
+local TargetOctagonButton = makeHalfBtn(TargetPage, "Octagon  •  Off", 200, 422, Color3.fromRGB(60, 90, 80))
+local TargetDiamondButton = makeHalfBtn(TargetPage, "Diamond  •  Off", 8, 456, Color3.fromRGB(100, 50, 80))
+local TargetCrossButton = makeHalfBtn(TargetPage, "Cross  •  Off", 200, 456, Color3.fromRGB(80, 80, 50))
 
 local TargetRadiusFrame = Instance.new("Frame")
 TargetRadiusFrame.Size = UDim2.new(1, -12, 0, 42)
-TargetRadiusFrame.Position = UDim2.new(0, 6, 0, 402)
+TargetRadiusFrame.Position = UDim2.new(0, 6, 0, 494)
 TargetRadiusFrame.BackgroundColor3 = Color3.fromRGB(26, 26, 32)
 TargetRadiusFrame.BorderSizePixel = 0
 TargetRadiusFrame.Parent = TargetPage
@@ -593,14 +651,14 @@ TargetRadiusDisplay.Parent = TargetRadiusFrame
 
 local TargetPartsLabel = Instance.new("TextLabel")
 TargetPartsLabel.Size = UDim2.new(1, 0, 0, 14)
-TargetPartsLabel.Position = UDim2.new(0, 0, 0, 450)
+TargetPartsLabel.Position = UDim2.new(0, 0, 0, 544)
 TargetPartsLabel.BackgroundTransparency = 1
 TargetPartsLabel.Text = "Parts: 0"
 TargetPartsLabel.TextColor3 = Color3.fromRGB(200, 150, 90)
 TargetPartsLabel.Font = Enum.Font.Gotham
 TargetPartsLabel.TextSize = 11
 TargetPartsLabel.Parent = TargetPage
-TargetPage.CanvasSize = UDim2.new(0, 0, 0, 480)
+TargetPage.CanvasSize = UDim2.new(0, 0, 0, 580)
 
 -- TEXT PAGE
 makeLabel(TextPage, "SUPER TEXT", 6)
@@ -735,83 +793,71 @@ UserInputService.InputChanged:Connect(function(input)
 end)
 
 -- ==================== LOGIC ====================
-local radius = 50
-local height = 100
-local rotationSpeed = 0.65
-local attractionStrength = 1100
-local ringPartsEnabled = false
-local localSphereEnabled = false
-local localSquareEnabled = false
-local localCubeEnabled = false
-local localDownConeEnabled = false
-local localBallEnabled = false
-local localHexEnabled = false
-local localRectEnabled = false
-local localBoxEnabled = false
-local localPyramidEnabled = false
-local localConeEnabled = false
-local localOctaEnabled = false
-local localStarEnabled = false
-local localPentagonEnabled = false
-local localOctagonEnabled = false
-local localDiamondEnabled = false
-local localCrossEnabled = false
+-- State packed into tables to stay under Luau's 200 local-register limit
+local ST = {
+	radius = 50,
+	height = 100,
+	rotationSpeed = 0.65,
+	attractionStrength = 1100,
+	ringPartsEnabled = false,
+	freezeEnabled = false,
+	smoothMode = true,
+	shapeSpinSpeed = 0.20,
+	fixedPosEnabled = false,
+	fixedBasePosition = nil,
+	fixedOffsetX = 0,
+	fixedOffsetY = 0,
+	fixedOffsetZ = 0,
+	fixedMarker = nil,
+	targetRadius = 50,
+	targetRingEnabled = false,
+	targetPlayer = nil,
+	targetPlayers = {},
+	autoTargetNearest = false,
+	multiTargetEnabled = false,
+	spectateEnabled = false,
+	maxMultiTargets = 3,
+	uiVisible = true,
+	targetHeight = 100,
+	targetRotationSpeed = 0.65,
+	targetAttractionStrength = 1100,
+	cursorRingEnabled = false,
+	cursorOrbitRadius = 5.2,
+	cursorRotationSpeed = 1.6,
+	cursorAttraction = 420,
+	maxCursorDistance = 200,
+	minDistanceFromSelf = 10,
+	textEnabled = false,
+	textString = "GABS",
+	textPixelSize = 4.5,
+	textHeightOffset = 11,
+	textFrontOffset = -17,
+	textAttraction = 1300,
+	localPartsCount = 0,
+	targetPartsCount = 0,
+	lastLocalTriCount = 30,
+	lastTargetTriCount = 30,
+	frozenAngle = 0,
+}
 threeDPlusShape = nil
-local freezeEnabled = false
-local smoothMode = true
-local shapeSpinSpeed = 0.20
-
-local fixedPosEnabled = false
-local fixedBasePosition = nil
-local fixedOffsetX = 0
-local fixedOffsetY = 0
-local fixedOffsetZ = 0
-local fixedMarker = nil
-
-local targetRadius = 50
-local targetRingEnabled = false
-local targetSphereEnabled = false
-local targetSquareEnabled = false
-local targetCubeEnabled = false
-local targetDownConeEnabled = false
-local targetBallEnabled = false
-local targetHexEnabled = false
-local targetRectEnabled = false
-local targetBoxEnabled = false
-local targetPyramidEnabled = false
-local targetConeEnabled = false
-local targetOctaEnabled = false
-local targetStarEnabled = false
-local targetPentagonEnabled = false
-local targetOctagonEnabled = false
-local targetDiamondEnabled = false
-local targetCrossEnabled = false
-local targetPlayer = nil
-local targetHeight = 100
-local targetRotationSpeed = 0.65
-local targetAttractionStrength = 1100
-
-local cursorRingEnabled = false
-local cursorOrbitRadius = 5.2
-local cursorRotationSpeed = 1.6
-local cursorAttraction = 420
-local maxCursorDistance = 200
-local minDistanceFromSelf = 10
-
-local textEnabled = false
-local textString = "GABS"
-local textPixelSize = 4.5
-local textHeightOffset = 11
-local textFrontOffset = -17
-local textAttraction = 1300
-
 local parts = {}
-local localPartsCount = 0
-local targetPartsCount = 0
-local lastLocalTriCount = 30
-local lastTargetTriCount = 30
-local frozenAngle = 0
 local mouse = LocalPlayer:GetMouse()
+
+-- Local / target shape flags (table fields, not locals)
+local LS = {
+	sphere = false, square = false, cube = false, downcone = false, ball = false,
+	hex = false, rect = false, box = false, pyramid = false, cone = false,
+	octa = false, star = false, pentagon = false, octagon = false, diamond = false, cross = false,
+}
+local TS = {
+	sphere = false, square = false, cube = false, downcone = false, ball = false,
+	hex = false, rect = false, box = false, pyramid = false, cone = false,
+	octa = false, star = false, pentagon = false, octagon = false, diamond = false, cross = false,
+}
+
+-- Compatibility aliases via metatable proxies would be slow; use explicit redirects below as locals that point into tables is NOT possible for booleans.
+-- Instead we rewrite references. For minimal churn, bind short upvalues only where needed inside functions.
+
 
 local Font = {
 	[" "] = {"00000","00000","00000","00000","00000","00000","00000"},
@@ -897,7 +943,7 @@ local function getTextPoints(str)
 			local line = rows[row]
 			for col = 1, #line do
 				if string.sub(line, col, col) == "1" then
-					table.insert(points, Vector3.new((cursorX + (col - 1)) * textPixelSize, (h - row) * textPixelSize, 0))
+					table.insert(points, Vector3.new((cursorX + (col - 1)) * ST.textPixelSize, (h - row) * ST.textPixelSize, 0))
 				end
 			end
 		end
@@ -917,10 +963,10 @@ local function getTextPoints(str)
 	return points
 end
 
-local currentTextPoints = getTextPoints(textString)
+local currentTextPoints = getTextPoints(ST.textString)
 TextBox:GetPropertyChangedSignal("Text"):Connect(function()
-	textString = TextBox.Text
-	currentTextPoints = getTextPoints(textString)
+	ST.textString = TextBox.Text
+	currentTextPoints = getTextPoints(ST.textString)
 end)
 
 local function RetainPart(part)
@@ -949,12 +995,12 @@ Workspace.DescendantAdded:Connect(addPart)
 Workspace.DescendantRemoving:Connect(removePart)
 
 local function anyShapeActive()
-	return textEnabled or ringPartsEnabled or localSphereEnabled or localSquareEnabled or localCubeEnabled or localDownConeEnabled or localBallEnabled
-		or localHexEnabled or localRectEnabled or localBoxEnabled or localPyramidEnabled or localConeEnabled or localOctaEnabled or localStarEnabled
-		or localPentagonEnabled or localOctagonEnabled or localDiamondEnabled or localCrossEnabled or threeDPlusShape ~= nil
-		or cursorRingEnabled or targetRingEnabled or targetSphereEnabled or targetSquareEnabled or targetCubeEnabled or targetDownConeEnabled or targetBallEnabled
-		or targetHexEnabled or targetRectEnabled or targetBoxEnabled or targetPyramidEnabled or targetConeEnabled or targetOctaEnabled or targetStarEnabled
-		or targetPentagonEnabled or targetOctagonEnabled or targetDiamondEnabled or targetCrossEnabled
+	return ST.textEnabled or ST.ringPartsEnabled or LS.sphere or LS.square or LS.cube or LS.downcone or LS.ball
+		or LS.hex or LS.rect or LS.box or LS.pyramid or LS.cone or LS.octa or LS.star
+		or LS.pentagon or LS.octagon or LS.diamond or LS.cross or threeDPlusShape ~= nil
+		or ST.cursorRingEnabled or ST.targetRingEnabled or TS.sphere or TS.square or TS.cube or TS.downcone or TS.ball
+		or TS.hex or TS.rect or TS.box or TS.pyramid or TS.cone or TS.octa or TS.star
+		or TS.pentagon or TS.octagon or TS.diamond or TS.cross
 end
 
 RunService.Heartbeat:Connect(function()
@@ -962,36 +1008,56 @@ RunService.Heartbeat:Connect(function()
 end)
 
 local function isLocalPart(index, total)
-	if cursorRingEnabled or textEnabled then return true end
-	if not targetRingEnabled and not targetSphereEnabled and not targetSquareEnabled and not targetCubeEnabled and not targetDownConeEnabled and not targetBallEnabled
-		and not targetHexEnabled and not targetRectEnabled and not targetBoxEnabled and not targetPyramidEnabled and not targetConeEnabled and not targetOctaEnabled and not targetStarEnabled
-		and not targetPentagonEnabled and not targetOctagonEnabled and not targetDiamondEnabled and not targetCrossEnabled then return true end
-	if not ringPartsEnabled and not localSphereEnabled and not localSquareEnabled and not localCubeEnabled and not localDownConeEnabled and not localBallEnabled
-		and not localHexEnabled and not localRectEnabled and not localBoxEnabled and not localPyramidEnabled and not localConeEnabled and not localOctaEnabled and not localStarEnabled
-		and not localPentagonEnabled and not localOctagonEnabled and not localDiamondEnabled and not localCrossEnabled and threeDPlusShape == nil then return false end
+	if ST.cursorRingEnabled or ST.textEnabled then return true end
+	if not ST.targetRingEnabled and not TS.sphere and not TS.square and not TS.cube and not TS.downcone and not TS.ball
+		and not TS.hex and not TS.rect and not TS.box and not TS.pyramid and not TS.cone and not TS.octa and not TS.star
+		and not TS.pentagon and not TS.octagon and not TS.diamond and not TS.cross then return true end
+	if not ST.ringPartsEnabled and not LS.sphere and not LS.square and not LS.cube and not LS.downcone and not LS.ball
+		and not LS.hex and not LS.rect and not LS.box and not LS.pyramid and not LS.cone and not LS.octa and not LS.star
+		and not LS.pentagon and not LS.octagon and not LS.diamond and not LS.cross and threeDPlusShape == nil then return false end
 	return index <= math.floor(total * 0.7)
 end
 
 local function applyVelocity(part, targetPos, strength)
+	-- Aggressive retention: keep network ownership hints + stronger pull for shapes
+	pcall(function()
+		part.CustomPhysicalProperties = PhysicalProperties.new(0, 0, 0, 0, 0)
+		part.CanCollide = false
+		part.Massless = true
+	end)
 	local dir = targetPos - part.Position
 	local mag = dir.Magnitude
-	if smoothMode then
-		if mag > 0.22 then
-			part.Velocity = dir.Unit * math.min(strength, mag * 20)
-		elseif mag > 0.06 then
-			part.Velocity = dir.Unit * (mag * 11)
+	if mag < 0.02 then
+		part.Velocity = Vector3.zero
+		pcall(function() part.AssemblyLinearVelocity = Vector3.zero end)
+		return
+	end
+	local unit = dir.Unit
+	if ST.smoothMode then
+		-- stronger smooth pull so shapes hold better
+		local speed = math.min(strength * 1.35, mag * 28)
+		if mag > 0.15 then
+			part.Velocity = unit * speed
+			pcall(function() part.AssemblyLinearVelocity = unit * speed end)
+		elseif mag > 0.04 then
+			local s = mag * 16
+			part.Velocity = unit * s
+			pcall(function() part.AssemblyLinearVelocity = unit * s end)
 		else
-			part.Velocity = Vector3.zero
-			part.AssemblyLinearVelocity = Vector3.zero
+			part.Velocity = unit * (mag * 8)
 		end
 	else
-		if mag > 0.12 then
-			part.Velocity = dir.Unit * math.min(strength * 1.8, mag * 38)
-		elseif mag > 0.04 then
-			part.Velocity = dir.Unit * (mag * 22)
+		-- aggressive mode
+		local speed = math.min(strength * 2.4, mag * 55)
+		if mag > 0.08 then
+			part.Velocity = unit * speed
+			pcall(function() part.AssemblyLinearVelocity = unit * speed end)
+		elseif mag > 0.03 then
+			local s = mag * 30
+			part.Velocity = unit * s
+			pcall(function() part.AssemblyLinearVelocity = unit * s end)
 		else
-			part.Velocity = Vector3.zero
-			part.AssemblyLinearVelocity = Vector3.zero
+			part.Velocity = unit * (mag * 14)
 		end
 	end
 end
@@ -1658,16 +1724,16 @@ function get3DPlusEdges(center, radiusValue, angle, shape)
 end
 
 local function getOrbitCenter()
-	if fixedPosEnabled and fixedBasePosition then
-		return fixedBasePosition + Vector3.new(fixedOffsetX, fixedOffsetY, fixedOffsetZ)
+	if ST.fixedPosEnabled and ST.fixedBasePosition then
+		return ST.fixedBasePosition + Vector3.new(ST.fixedOffsetX, ST.fixedOffsetY, ST.fixedOffsetZ)
 	end
 	local hrp = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
 	return hrp and hrp.Position or Vector3.zero
 end
 
 local function updateMarker()
-	if fixedMarker and fixedMarker.Parent and fixedBasePosition then
-		fixedMarker.Position = fixedBasePosition + Vector3.new(fixedOffsetX, fixedOffsetY, fixedOffsetZ)
+	if ST.fixedMarker and ST.fixedMarker.Parent and ST.fixedBasePosition then
+		ST.fixedMarker.Position = ST.fixedBasePosition + Vector3.new(ST.fixedOffsetX, ST.fixedOffsetY, ST.fixedOffsetZ)
 	end
 end
 
@@ -1679,13 +1745,13 @@ local function setupVerticalSlider(knob, fill, bg, axis)
 		relY = math.clamp(relY, 0, 1)
 		local value = math.floor((0.5 - relY) * 200)
 		if axis == "X" then
-			fixedOffsetX = value
+			ST.fixedOffsetX = value
 			XLabel.Text = "X: " .. value
 		elseif axis == "Y" then
-			fixedOffsetY = value
+			ST.fixedOffsetY = value
 			YLabel.Text = "Y: " .. value
 		else
-			fixedOffsetZ = value
+			ST.fixedOffsetZ = value
 			ZLabel.Text = "Z: " .. value
 		end
 		knob.Position = UDim2.new(0.5, -11, relY, -7)
@@ -1739,15 +1805,15 @@ setupVerticalSlider(ZKnob, ZSliderFill, ZSliderBg, "Z")
 
 -- LOCAL HEARTBEAT
 RunService.Heartbeat:Connect(function()
-	localPartsCount = 0
+	ST.localPartsCount = 0
 
-	if textEnabled then
+	if ST.textEnabled then
 		local hrp = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
 		if not hrp then return end
 		local pts = currentTextPoints
 		local count = #pts
 		if count == 0 then LocalPartsLabel.Text = "Parts: 0" return end
-		local baseCF = hrp.CFrame * CFrame.new(0, textHeightOffset, textFrontOffset)
+		local baseCF = hrp.CFrame * CFrame.new(0, ST.textHeightOffset, ST.textFrontOffset)
 		for i, part in ipairs(parts) do
 			if part.Parent and not part.Anchored then
 				local idx = ((i - 1) % count) + 1
@@ -1757,55 +1823,55 @@ RunService.Heartbeat:Connect(function()
 				local oy = ((i * 31) % 100) / 100 * spread - spread/2
 				local oz = ((i * 47) % 100) / 100 * spread - spread/2
 				local targetPos = (baseCF * CFrame.new(localPos + Vector3.new(ox, oy, oz))).Position
-				applyVelocity(part, targetPos, textAttraction)
-				localPartsCount += 1
+				applyVelocity(part, targetPos, ST.textAttraction)
+				ST.localPartsCount += 1
 			end
 		end
-		LocalPartsLabel.Text = "Parts: " .. localPartsCount
+		LocalPartsLabel.Text = "Parts: " .. ST.localPartsCount
 		return
 	end
 
-	if cursorRingEnabled then
+	if ST.cursorRingEnabled then
 		local hrp = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
 		if not hrp then return end
 		local mousePos = mouse.Hit.Position
 		local center = mousePos
 		local offset = center - hrp.Position
-		if offset.Magnitude > maxCursorDistance then
-			center = hrp.Position + offset.Unit * maxCursorDistance
+		if offset.Magnitude > ST.maxCursorDistance then
+			center = hrp.Position + offset.Unit * ST.maxCursorDistance
 		end
 		local selfOffset = center - hrp.Position
-		if selfOffset.Magnitude < minDistanceFromSelf then
-			center = hrp.Position + (selfOffset.Magnitude > 0.1 and selfOffset.Unit or Vector3.new(1,0,0)) * minDistanceFromSelf
+		if selfOffset.Magnitude < ST.minDistanceFromSelf then
+			center = hrp.Position + (selfOffset.Magnitude > 0.1 and selfOffset.Unit or Vector3.new(1,0,0)) * ST.minDistanceFromSelf
 		end
-		local baseAngle = tick() * cursorRotationSpeed
+		local baseAngle = tick() * ST.cursorRotationSpeed
 		for i, part in ipairs(parts) do
 			if part.Parent and not part.Anchored then
 				local angle = baseAngle + i * 0.37
-				local targetPos = Vector3.new(center.X + math.cos(angle) * cursorOrbitRadius, center.Y + 1.2, center.Z + math.sin(angle) * cursorOrbitRadius)
-				applyVelocity(part, targetPos, cursorAttraction)
-				localPartsCount += 1
+				local targetPos = Vector3.new(center.X + math.cos(angle) * ST.cursorOrbitRadius, center.Y + 1.2, center.Z + math.sin(angle) * ST.cursorOrbitRadius)
+				applyVelocity(part, targetPos, ST.cursorAttraction)
+				ST.localPartsCount += 1
 			end
 		end
-		LocalPartsLabel.Text = "Parts: " .. localPartsCount
+		LocalPartsLabel.Text = "Parts: " .. ST.localPartsCount
 		return
 	end
 
-	if not ringPartsEnabled and not localSphereEnabled and not localSquareEnabled and not localCubeEnabled and not localDownConeEnabled and not localBallEnabled
-		and not localHexEnabled and not localRectEnabled and not localBoxEnabled and not localPyramidEnabled and not localConeEnabled and not localOctaEnabled and not localStarEnabled
-		and not localPentagonEnabled and not localOctagonEnabled and not localDiamondEnabled and not localCrossEnabled and threeDPlusShape == nil then
+	if not ST.ringPartsEnabled and not LS.sphere and not LS.square and not LS.cube and not LS.downcone and not LS.ball
+		and not LS.hex and not LS.rect and not LS.box and not LS.pyramid and not LS.cone and not LS.octa and not LS.star
+		and not LS.pentagon and not LS.octagon and not LS.diamond and not LS.cross and threeDPlusShape == nil then
 		LocalPartsLabel.Text = "Parts: 0"
 		return
 	end
 
 	local center = getOrbitCenter()
 	local total = #parts
-	local r = radius
+	local r = ST.radius
 	local triCounter = 0
 
-	local baseAngle = freezeEnabled and frozenAngle or (tick() * rotationSpeed * 2)
-	if not freezeEnabled then frozenAngle = baseAngle end
-	local spinAngle = freezeEnabled and frozenAngle or (tick() * shapeSpinSpeed)
+	local baseAngle = ST.freezeEnabled and ST.frozenAngle or (tick() * ST.rotationSpeed * 2)
+	if not ST.freezeEnabled then ST.frozenAngle = baseAngle end
+	local spinAngle = ST.freezeEnabled and ST.frozenAngle or (tick() * ST.shapeSpinSpeed)
 
 	local a1, a2, a3 = baseAngle, baseAngle + 2.0944, baseAngle + 4.1888
 	local p1 = Vector3.new(center.X + math.cos(a1)*r, center.Y, center.Z + math.sin(a1)*r)
@@ -1834,7 +1900,7 @@ RunService.Heartbeat:Connect(function()
 	local diamondEdges = getDiamondEdges(center, r, spinAngle)
 	local crossEdges = getCrossEdges(center, r, spinAngle)
 	local threeDPlusEdges = threeDPlusShape and get3DPlusEdges(center, r, spinAngle, threeDPlusShape) or {}
-	local spherePoints = localBallEnabled and getSpherePoints(center, r * 0.95, spinAngle) or {}
+	local spherePoints = LS.ball and getSpherePoints(center, r * 0.95, spinAngle) or {}
 
 	for i, part in ipairs(parts) do
 		if part.Parent and not part.Anchored and isLocalPart(i, total) then
@@ -1843,156 +1909,180 @@ RunService.Heartbeat:Connect(function()
 
 			if threeDPlusShape and #threeDPlusEdges > 0 then
 				local edgeIndex = ((triCounter - 1) % #threeDPlusEdges) + 1
-				local partsPerEdge = math.max(1, math.floor(lastLocalTriCount / #threeDPlusEdges))
+				local partsPerEdge = math.max(1, math.floor(ST.lastLocalTriCount / #threeDPlusEdges))
 				local idxOnEdge = math.floor((triCounter - 1) / #threeDPlusEdges)
 				local t = (idxOnEdge % partsPerEdge) / partsPerEdge
 				targetPos = threeDPlusEdges[edgeIndex][1]:Lerp(threeDPlusEdges[edgeIndex][2], t)
-			elseif localBallEnabled then
+			elseif LS.ball then
 				local idx = ((triCounter - 1) % #spherePoints) + 1
 				targetPos = spherePoints[idx]
-			elseif localDownConeEnabled then
+			elseif LS.downcone then
 				local edgeIndex = ((triCounter - 1) % #downConeEdges) + 1
-				local partsPerEdge = math.max(1, math.floor(lastLocalTriCount / #downConeEdges))
+				local partsPerEdge = math.max(1, math.floor(ST.lastLocalTriCount / #downConeEdges))
 				local idxOnEdge = math.floor((triCounter - 1) / #downConeEdges)
 				local t = (idxOnEdge % partsPerEdge) / partsPerEdge
 				targetPos = downConeEdges[edgeIndex][1]:Lerp(downConeEdges[edgeIndex][2], t)
-			elseif localConeEnabled then
+			elseif LS.cone then
 				local edgeIndex = ((triCounter - 1) % #coneEdges) + 1
-				local partsPerEdge = math.max(1, math.floor(lastLocalTriCount / #coneEdges))
+				local partsPerEdge = math.max(1, math.floor(ST.lastLocalTriCount / #coneEdges))
 				local idxOnEdge = math.floor((triCounter - 1) / #coneEdges)
 				local t = (idxOnEdge % partsPerEdge) / partsPerEdge
 				targetPos = coneEdges[edgeIndex][1]:Lerp(coneEdges[edgeIndex][2], t)
-			elseif localCrossEnabled then
+			elseif LS.cross then
 				local edgeIndex = ((triCounter - 1) % #crossEdges) + 1
-				local partsPerEdge = math.max(1, math.floor(lastLocalTriCount / #crossEdges))
+				local partsPerEdge = math.max(1, math.floor(ST.lastLocalTriCount / #crossEdges))
 				local idxOnEdge = math.floor((triCounter - 1) / #crossEdges)
 				local t = (idxOnEdge % partsPerEdge) / partsPerEdge
 				targetPos = crossEdges[edgeIndex][1]:Lerp(crossEdges[edgeIndex][2], t)
-			elseif localDiamondEnabled then
+			elseif LS.diamond then
 				local edgeIndex = ((triCounter - 1) % 4) + 1
-				local partsPerEdge = math.max(1, math.floor(lastLocalTriCount / 4))
+				local partsPerEdge = math.max(1, math.floor(ST.lastLocalTriCount / 4))
 				local idxOnEdge = math.floor((triCounter - 1) / 4)
 				local t = (idxOnEdge % partsPerEdge) / partsPerEdge
 				targetPos = diamondEdges[edgeIndex][1]:Lerp(diamondEdges[edgeIndex][2], t)
-			elseif localOctagonEnabled then
+			elseif LS.octagon then
 				local edgeIndex = ((triCounter - 1) % 8) + 1
-				local partsPerEdge = math.max(1, math.floor(lastLocalTriCount / 8))
+				local partsPerEdge = math.max(1, math.floor(ST.lastLocalTriCount / 8))
 				local idxOnEdge = math.floor((triCounter - 1) / 8)
 				local t = (idxOnEdge % partsPerEdge) / partsPerEdge
 				targetPos = octagonEdges[edgeIndex][1]:Lerp(octagonEdges[edgeIndex][2], t)
-			elseif localPentagonEnabled then
+			elseif LS.pentagon then
 				local edgeIndex = ((triCounter - 1) % 5) + 1
-				local partsPerEdge = math.max(1, math.floor(lastLocalTriCount / 5))
+				local partsPerEdge = math.max(1, math.floor(ST.lastLocalTriCount / 5))
 				local idxOnEdge = math.floor((triCounter - 1) / 5)
 				local t = (idxOnEdge % partsPerEdge) / partsPerEdge
 				targetPos = pentagonEdges[edgeIndex][1]:Lerp(pentagonEdges[edgeIndex][2], t)
-			elseif localStarEnabled then
+			elseif LS.star then
 				local edgeIndex = ((triCounter - 1) % 10) + 1
-				local partsPerEdge = math.max(1, math.floor(lastLocalTriCount / 10))
+				local partsPerEdge = math.max(1, math.floor(ST.lastLocalTriCount / 10))
 				local idxOnEdge = math.floor((triCounter - 1) / 10)
 				local t = (idxOnEdge % partsPerEdge) / partsPerEdge
 				targetPos = starEdges[edgeIndex][1]:Lerp(starEdges[edgeIndex][2], t)
-			elseif localOctaEnabled then
+			elseif LS.octa then
 				local edgeIndex = ((triCounter - 1) % 12) + 1
-				local partsPerEdge = math.max(1, math.floor(lastLocalTriCount / 12))
+				local partsPerEdge = math.max(1, math.floor(ST.lastLocalTriCount / 12))
 				local idxOnEdge = math.floor((triCounter - 1) / 12)
 				local t = (idxOnEdge % partsPerEdge) / partsPerEdge
 				targetPos = octaEdges[edgeIndex][1]:Lerp(octaEdges[edgeIndex][2], t)
-			elseif localPyramidEnabled then
+			elseif LS.pyramid then
 				local edgeIndex = ((triCounter - 1) % 8) + 1
-				local partsPerEdge = math.max(1, math.floor(lastLocalTriCount / 8))
+				local partsPerEdge = math.max(1, math.floor(ST.lastLocalTriCount / 8))
 				local idxOnEdge = math.floor((triCounter - 1) / 8)
 				local t = (idxOnEdge % partsPerEdge) / partsPerEdge
 				targetPos = pyramidEdges[edgeIndex][1]:Lerp(pyramidEdges[edgeIndex][2], t)
-			elseif localBoxEnabled then
+			elseif LS.box then
 				local edgeIndex = ((triCounter - 1) % 12) + 1
-				local partsPerEdge = math.max(1, math.floor(lastLocalTriCount / 12))
+				local partsPerEdge = math.max(1, math.floor(ST.lastLocalTriCount / 12))
 				local idxOnEdge = math.floor((triCounter - 1) / 12)
 				local t = (idxOnEdge % partsPerEdge) / partsPerEdge
 				targetPos = boxEdges[edgeIndex][1]:Lerp(boxEdges[edgeIndex][2], t)
-			elseif localHexEnabled then
+			elseif LS.hex then
 				local edgeIndex = ((triCounter - 1) % 6) + 1
-				local partsPerEdge = math.max(1, math.floor(lastLocalTriCount / 6))
+				local partsPerEdge = math.max(1, math.floor(ST.lastLocalTriCount / 6))
 				local idxOnEdge = math.floor((triCounter - 1) / 6)
 				local t = (idxOnEdge % partsPerEdge) / partsPerEdge
 				targetPos = hexEdges[edgeIndex][1]:Lerp(hexEdges[edgeIndex][2], t)
-			elseif localRectEnabled then
+			elseif LS.rect then
 				local edgeIndex = ((triCounter - 1) % 4) + 1
-				local partsPerEdge = math.max(1, math.floor(lastLocalTriCount / 4))
+				local partsPerEdge = math.max(1, math.floor(ST.lastLocalTriCount / 4))
 				local idxOnEdge = math.floor((triCounter - 1) / 4)
 				local t = (idxOnEdge % partsPerEdge) / partsPerEdge
 				targetPos = rectEdges[edgeIndex][1]:Lerp(rectEdges[edgeIndex][2], t)
-			elseif localCubeEnabled then
+			elseif LS.cube then
 				local edgeIndex = ((triCounter - 1) % 12) + 1
-				local partsPerEdge = math.max(1, math.floor(lastLocalTriCount / 12))
+				local partsPerEdge = math.max(1, math.floor(ST.lastLocalTriCount / 12))
 				local idxOnEdge = math.floor((triCounter - 1) / 12)
 				local t = (idxOnEdge % partsPerEdge) / partsPerEdge
 				targetPos = cubeEdges[edgeIndex][1]:Lerp(cubeEdges[edgeIndex][2], t)
-			elseif localSphereEnabled then
+			elseif LS.sphere then
 				local edgeIndex = ((triCounter-1) % 3) + 1
-				local partsPerEdge = math.max(1, math.floor(lastLocalTriCount / 3))
+				local partsPerEdge = math.max(1, math.floor(ST.lastLocalTriCount / 3))
 				local idxOnEdge = math.floor((triCounter-1) / 3)
 				local t = (idxOnEdge % partsPerEdge) / partsPerEdge
 				targetPos = triEdges[edgeIndex][1]:Lerp(triEdges[edgeIndex][2], t)
-			elseif localSquareEnabled then
+			elseif LS.square then
 				local edgeIndex = ((triCounter-1) % 4) + 1
-				local partsPerEdge = math.max(1, math.floor(lastLocalTriCount / 4))
+				local partsPerEdge = math.max(1, math.floor(ST.lastLocalTriCount / 4))
 				local idxOnEdge = math.floor((triCounter-1) / 4)
 				local t = (idxOnEdge % partsPerEdge) / partsPerEdge
 				targetPos = squareEdges[edgeIndex][1]:Lerp(squareEdges[edgeIndex][2], t)
 			else
 				local pos = part.Position
 				local angle = math.atan2(pos.Z - center.Z, pos.X - center.X)
-				local newAngle = freezeEnabled and angle or (angle + math.rad(rotationSpeed))
+				local newAngle = ST.freezeEnabled and angle or (angle + math.rad(ST.rotationSpeed))
 				local dist = (Vector3.new(pos.X, center.Y, pos.Z) - center).Magnitude
 				targetPos = Vector3.new(
 					center.X + math.cos(newAngle) * math.min(r, dist),
-					center.Y + (height * math.abs(math.sin((pos.Y - center.Y)/height))),
+					center.Y + (ST.height * math.abs(math.sin((pos.Y - center.Y)/ST.height))),
 					center.Z + math.sin(newAngle) * math.min(r, dist)
 				)
 			end
 
-			if not localSphereEnabled and not localSquareEnabled and not localCubeEnabled and not localDownConeEnabled and not localBallEnabled
-				and not localHexEnabled and not localRectEnabled and not localBoxEnabled and not localPyramidEnabled and not localConeEnabled and not localOctaEnabled and not localStarEnabled
-				and not localPentagonEnabled and not localOctagonEnabled and not localDiamondEnabled and not localCrossEnabled and threeDPlusShape == nil then
+			if not LS.sphere and not LS.square and not LS.cube and not LS.downcone and not LS.ball
+				and not LS.hex and not LS.rect and not LS.box and not LS.pyramid and not LS.cone and not LS.octa and not LS.star
+				and not LS.pentagon and not LS.octagon and not LS.diamond and not LS.cross and threeDPlusShape == nil then
 				local dir = targetPos - part.Position
 				if dir.Magnitude > 0.01 then
-					part.Velocity = dir.Unit * attractionStrength
+					part.Velocity = dir.Unit * ST.attractionStrength
 				end
 			else
-				applyVelocity(part, targetPos, attractionStrength)
+				applyVelocity(part, targetPos, ST.attractionStrength)
 			end
 
-			localPartsCount += 1
+			ST.localPartsCount += 1
 		end
 	end
-	lastLocalTriCount = math.max(3, localPartsCount)
-	LocalPartsLabel.Text = "Parts: " .. localPartsCount
+	ST.lastLocalTriCount = math.max(3, ST.localPartsCount)
+	LocalPartsLabel.Text = "Parts: " .. ST.localPartsCount
 end)
 
 -- TARGET HEARTBEAT
 RunService.Heartbeat:Connect(function()
-	targetPartsCount = 0
-	if cursorRingEnabled or textEnabled then return end
-	if (not targetRingEnabled and not targetSphereEnabled and not targetSquareEnabled and not targetCubeEnabled and not targetDownConeEnabled and not targetBallEnabled
-		and not targetHexEnabled and not targetRectEnabled and not targetBoxEnabled and not targetPyramidEnabled and not targetConeEnabled and not targetOctaEnabled and not targetStarEnabled
-		and not targetPentagonEnabled and not targetOctagonEnabled and not targetDiamondEnabled and not targetCrossEnabled) or not targetPlayer then
+	ST.targetPartsCount = 0
+	if ST.cursorRingEnabled or ST.textEnabled then return end
+	if not isTargetModeOn() then
 		TargetPartsLabel.Text = "Parts: 0"
 		return
 	end
 
-	local char = targetPlayer.Character
-	if not char then return end
-	local hrp = char:FindFirstChild("HumanoidRootPart")
-	if not hrp then return end
-	local center = hrp.Position
-	local total = #parts
-	local r = targetRadius
-	local triCounter = 0
+	-- Auto-target nearest
+	if ST.autoTargetNearest then
+		local nearest = findNearestPlayer()
+		if nearest then
+			if ST.multiTargetEnabled then
+				if #ST.targetPlayers == 0 then addToMultiTarget(nearest) end
+				-- keep nearest as primary
+				if ST.targetPlayers[1] ~= nearest then
+					for i, p in ipairs(ST.targetPlayers) do
+						if p == nearest then table.remove(ST.targetPlayers, i) break end
+					end
+					table.insert(ST.targetPlayers, 1, nearest)
+					syncPrimaryTarget()
+				end
+			else
+				setSingleTarget(nearest)
+			end
+			updateMultiBtn()
+		end
+	end
 
-	local baseAngle = freezeEnabled and frozenAngle or (tick() * targetRotationSpeed * 2)
-	if not freezeEnabled then frozenAngle = baseAngle end
-	local spinAngle = freezeEnabled and frozenAngle or (tick() * shapeSpinSpeed)
+	local activeRoots = getActiveTargetRoots()
+	if #activeRoots == 0 then
+		TargetPartsLabel.Text = "Parts: 0 (no target / respawning)"
+		return
+	end
+
+	local total = #parts
+	local r = ST.targetRadius
+	local triCounter = 0
+	-- Primary center for shape edge generation (first target)
+	local char = activeRoots[1].char
+	local hrp = activeRoots[1].root
+	local center = activeRoots[1].center
+
+	local baseAngle = ST.freezeEnabled and ST.frozenAngle or (tick() * ST.targetRotationSpeed * 2)
+	if not ST.freezeEnabled then ST.frozenAngle = baseAngle end
+	local spinAngle = ST.freezeEnabled and ST.frozenAngle or (tick() * ST.shapeSpinSpeed)
 
 	local a1,a2,a3 = baseAngle, baseAngle+2.0944, baseAngle+4.1888
 	local p1 = Vector3.new(center.X+math.cos(a1)*r, center.Y, center.Z+math.sin(a1)*r)
@@ -2020,158 +2110,208 @@ RunService.Heartbeat:Connect(function()
 	local octagonEdges = getOctagonEdges(center, r, spinAngle)
 	local diamondEdges = getDiamondEdges(center, r, spinAngle)
 	local crossEdges = getCrossEdges(center, r, spinAngle)
-	local spherePoints = targetBallEnabled and getSpherePoints(center, r * 0.95, spinAngle) or {}
+	local spherePoints = TS.ball and getSpherePoints(center, r * 0.95, spinAngle) or {}
 
 	for i, part in ipairs(parts) do
 		if part.Parent and not part.Anchored and not isLocalPart(i, total) then
+			-- Multi-target: assign part to a target by index
+			local assigned = activeRoots[((i - 1) % #activeRoots) + 1]
+			local center = assigned.center
+			local char = assigned.char
 			if part:IsDescendantOf(char) then continue end
+			-- Skip all active target characters
+			local skipPart = false
+			for _, ar in ipairs(activeRoots) do
+				if part:IsDescendantOf(ar.char) then skipPart = true break end
+			end
+			if skipPart then continue end
+
 			triCounter += 1
 			local targetPos
 
-			if targetBallEnabled then
+			-- Multi-target uses stable rings around each player (shapes use primary geometry offset)
+			if #activeRoots > 1 and not (TS.ball or TS.sphere or TS.square or TS.cube
+				or TS.downcone or TS.hex or TS.rect or TS.box
+				or TS.pyramid or TS.cone or TS.octa or TS.star
+				or TS.pentagon or TS.octagon or TS.diamond or TS.cross) then
+				local angle = (tick() * ST.targetRotationSpeed * 2) + (triCounter * 0.37)
+				if ST.freezeEnabled then angle = ST.frozenAngle + triCounter * 0.37 end
+				targetPos = Vector3.new(
+					center.X + math.cos(angle) * r,
+					center.Y + math.sin(angle * 2) * 2,
+					center.Z + math.sin(angle) * r
+				)
+				applyVelocity(part, targetPos, ST.targetAttractionStrength)
+				ST.targetPartsCount += 1
+				continue
+			elseif #activeRoots > 1 then
+				-- shapes + multi: take primary-relative target then shift to assigned center
+				-- fall through using local center for orbit math below by recomputing simple ring
+				local angle = (tick() * ST.targetRotationSpeed * 2) + (triCounter * 0.37)
+				if ST.freezeEnabled then angle = ST.frozenAngle + triCounter * 0.37 end
+				targetPos = Vector3.new(
+					center.X + math.cos(angle) * r,
+					center.Y,
+					center.Z + math.sin(angle) * r
+				)
+				applyVelocity(part, targetPos, ST.targetAttractionStrength)
+				ST.targetPartsCount += 1
+				continue
+			end
+
+			if TS.ball then
 				local idx = ((triCounter - 1) % #spherePoints) + 1
 				targetPos = spherePoints[idx]
-			elseif targetDownConeEnabled then
+			elseif TS.downcone then
 				local edgeIndex = ((triCounter - 1) % #downConeEdges) + 1
-				local partsPerEdge = math.max(1, math.floor(lastTargetTriCount / #downConeEdges))
+				local partsPerEdge = math.max(1, math.floor(ST.lastTargetTriCount / #downConeEdges))
 				local idxOnEdge = math.floor((triCounter - 1) / #downConeEdges)
 				local t = (idxOnEdge % partsPerEdge) / partsPerEdge
 				targetPos = downConeEdges[edgeIndex][1]:Lerp(downConeEdges[edgeIndex][2], t)
-			elseif targetConeEnabled then
+			elseif TS.cone then
 				local edgeIndex = ((triCounter - 1) % #coneEdges) + 1
-				local partsPerEdge = math.max(1, math.floor(lastTargetTriCount / #coneEdges))
+				local partsPerEdge = math.max(1, math.floor(ST.lastTargetTriCount / #coneEdges))
 				local idxOnEdge = math.floor((triCounter - 1) / #coneEdges)
 				local t = (idxOnEdge % partsPerEdge) / partsPerEdge
 				targetPos = coneEdges[edgeIndex][1]:Lerp(coneEdges[edgeIndex][2], t)
-			elseif targetCrossEnabled then
+			elseif TS.cross then
 				local edgeIndex = ((triCounter - 1) % #crossEdges) + 1
-				local partsPerEdge = math.max(1, math.floor(lastTargetTriCount / #crossEdges))
+				local partsPerEdge = math.max(1, math.floor(ST.lastTargetTriCount / #crossEdges))
 				local idxOnEdge = math.floor((triCounter - 1) / #crossEdges)
 				local t = (idxOnEdge % partsPerEdge) / partsPerEdge
 				targetPos = crossEdges[edgeIndex][1]:Lerp(crossEdges[edgeIndex][2], t)
-			elseif targetDiamondEnabled then
+			elseif TS.diamond then
 				local edgeIndex = ((triCounter - 1) % 4) + 1
-				local partsPerEdge = math.max(1, math.floor(lastTargetTriCount / 4))
+				local partsPerEdge = math.max(1, math.floor(ST.lastTargetTriCount / 4))
 				local idxOnEdge = math.floor((triCounter - 1) / 4)
 				local t = (idxOnEdge % partsPerEdge) / partsPerEdge
 				targetPos = diamondEdges[edgeIndex][1]:Lerp(diamondEdges[edgeIndex][2], t)
-			elseif targetOctagonEnabled then
+			elseif TS.octagon then
 				local edgeIndex = ((triCounter - 1) % 8) + 1
-				local partsPerEdge = math.max(1, math.floor(lastTargetTriCount / 8))
+				local partsPerEdge = math.max(1, math.floor(ST.lastTargetTriCount / 8))
 				local idxOnEdge = math.floor((triCounter - 1) / 8)
 				local t = (idxOnEdge % partsPerEdge) / partsPerEdge
 				targetPos = octagonEdges[edgeIndex][1]:Lerp(octagonEdges[edgeIndex][2], t)
-			elseif targetPentagonEnabled then
+			elseif TS.pentagon then
 				local edgeIndex = ((triCounter - 1) % 5) + 1
-				local partsPerEdge = math.max(1, math.floor(lastTargetTriCount / 5))
+				local partsPerEdge = math.max(1, math.floor(ST.lastTargetTriCount / 5))
 				local idxOnEdge = math.floor((triCounter - 1) / 5)
 				local t = (idxOnEdge % partsPerEdge) / partsPerEdge
 				targetPos = pentagonEdges[edgeIndex][1]:Lerp(pentagonEdges[edgeIndex][2], t)
-			elseif targetStarEnabled then
+			elseif TS.star then
 				local edgeIndex = ((triCounter - 1) % 10) + 1
-				local partsPerEdge = math.max(1, math.floor(lastTargetTriCount / 10))
+				local partsPerEdge = math.max(1, math.floor(ST.lastTargetTriCount / 10))
 				local idxOnEdge = math.floor((triCounter - 1) / 10)
 				local t = (idxOnEdge % partsPerEdge) / partsPerEdge
 				targetPos = starEdges[edgeIndex][1]:Lerp(starEdges[edgeIndex][2], t)
-			elseif targetOctaEnabled then
+			elseif TS.octa then
 				local edgeIndex = ((triCounter - 1) % 12) + 1
-				local partsPerEdge = math.max(1, math.floor(lastTargetTriCount / 12))
+				local partsPerEdge = math.max(1, math.floor(ST.lastTargetTriCount / 12))
 				local idxOnEdge = math.floor((triCounter - 1) / 12)
 				local t = (idxOnEdge % partsPerEdge) / partsPerEdge
 				targetPos = octaEdges[edgeIndex][1]:Lerp(octaEdges[edgeIndex][2], t)
-			elseif targetPyramidEnabled then
+			elseif TS.pyramid then
 				local edgeIndex = ((triCounter - 1) % 8) + 1
-				local partsPerEdge = math.max(1, math.floor(lastTargetTriCount / 8))
+				local partsPerEdge = math.max(1, math.floor(ST.lastTargetTriCount / 8))
 				local idxOnEdge = math.floor((triCounter - 1) / 8)
 				local t = (idxOnEdge % partsPerEdge) / partsPerEdge
 				targetPos = pyramidEdges[edgeIndex][1]:Lerp(pyramidEdges[edgeIndex][2], t)
-			elseif targetBoxEnabled then
+			elseif TS.box then
 				local edgeIndex = ((triCounter - 1) % 12) + 1
-				local partsPerEdge = math.max(1, math.floor(lastTargetTriCount / 12))
+				local partsPerEdge = math.max(1, math.floor(ST.lastTargetTriCount / 12))
 				local idxOnEdge = math.floor((triCounter - 1) / 12)
 				local t = (idxOnEdge % partsPerEdge) / partsPerEdge
 				targetPos = boxEdges[edgeIndex][1]:Lerp(boxEdges[edgeIndex][2], t)
-			elseif targetHexEnabled then
+			elseif TS.hex then
 				local edgeIndex = ((triCounter - 1) % 6) + 1
-				local partsPerEdge = math.max(1, math.floor(lastTargetTriCount / 6))
+				local partsPerEdge = math.max(1, math.floor(ST.lastTargetTriCount / 6))
 				local idxOnEdge = math.floor((triCounter - 1) / 6)
 				local t = (idxOnEdge % partsPerEdge) / partsPerEdge
 				targetPos = hexEdges[edgeIndex][1]:Lerp(hexEdges[edgeIndex][2], t)
-			elseif targetRectEnabled then
+			elseif TS.rect then
 				local edgeIndex = ((triCounter - 1) % 4) + 1
-				local partsPerEdge = math.max(1, math.floor(lastTargetTriCount / 4))
+				local partsPerEdge = math.max(1, math.floor(ST.lastTargetTriCount / 4))
 				local idxOnEdge = math.floor((triCounter - 1) / 4)
 				local t = (idxOnEdge % partsPerEdge) / partsPerEdge
 				targetPos = rectEdges[edgeIndex][1]:Lerp(rectEdges[edgeIndex][2], t)
-			elseif targetCubeEnabled then
+			elseif TS.cube then
 				local edgeIndex = ((triCounter - 1) % 12) + 1
-				local partsPerEdge = math.max(1, math.floor(lastTargetTriCount / 12))
+				local partsPerEdge = math.max(1, math.floor(ST.lastTargetTriCount / 12))
 				local idxOnEdge = math.floor((triCounter - 1) / 12)
 				local t = (idxOnEdge % partsPerEdge) / partsPerEdge
 				targetPos = cubeEdges[edgeIndex][1]:Lerp(cubeEdges[edgeIndex][2], t)
-			elseif targetSphereEnabled then
+			elseif TS.sphere then
 				local edgeIndex = ((triCounter-1)%3)+1
-				local partsPerEdge = math.max(1, math.floor(lastTargetTriCount/3))
+				local partsPerEdge = math.max(1, math.floor(ST.lastTargetTriCount/3))
 				local idxOnEdge = math.floor((triCounter-1)/3)
 				local t = (idxOnEdge % partsPerEdge) / partsPerEdge
 				targetPos = triEdges[edgeIndex][1]:Lerp(triEdges[edgeIndex][2], t)
-			elseif targetSquareEnabled then
+			elseif TS.square then
 				local edgeIndex = ((triCounter-1)%4)+1
-				local partsPerEdge = math.max(1, math.floor(lastTargetTriCount/4))
+				local partsPerEdge = math.max(1, math.floor(ST.lastTargetTriCount/4))
 				local idxOnEdge = math.floor((triCounter-1)/4)
 				local t = (idxOnEdge % partsPerEdge) / partsPerEdge
 				targetPos = squareEdges[edgeIndex][1]:Lerp(squareEdges[edgeIndex][2], t)
 			else
+				-- Default target ring: stable orbit around the player
 				local pos = part.Position
-				local angle = math.atan2(pos.Z-center.Z, pos.X-center.X)
-				local newAngle = freezeEnabled and angle or (angle + math.rad(targetRotationSpeed))
-				local dist = (Vector3.new(pos.X,center.Y,pos.Z)-center).Magnitude
+				local angle = math.atan2(pos.Z - center.Z, pos.X - center.X)
+				if angle ~= angle then angle = (triCounter * 0.37) end -- NaN guard
+				local newAngle = ST.freezeEnabled and angle or (angle + math.rad(ST.targetRotationSpeed))
+				local flat = Vector3.new(pos.X - center.X, 0, pos.Z - center.Z)
+				local dist = flat.Magnitude
+				if dist < 1 then dist = r end
+				local useR = math.clamp(dist, r * 0.35, r)
+				if not ST.freezeEnabled then
+					useR = r
+				end
+				local yOff = math.sin(newAngle * 2 + triCounter * 0.15) * math.min(8, ST.targetHeight * 0.08)
 				targetPos = Vector3.new(
-					center.X + math.cos(newAngle)*math.min(r,dist),
-					center.Y + (targetHeight * math.abs(math.sin((pos.Y-center.Y)/targetHeight))),
-					center.Z + math.sin(newAngle)*math.min(r,dist)
+					center.X + math.cos(newAngle) * useR,
+					center.Y + yOff,
+					center.Z + math.sin(newAngle) * useR
 				)
 			end
 
-			if not targetSphereEnabled and not targetSquareEnabled and not targetCubeEnabled and not targetDownConeEnabled and not targetBallEnabled
-				and not targetHexEnabled and not targetRectEnabled and not targetBoxEnabled and not targetPyramidEnabled and not targetConeEnabled and not targetOctaEnabled and not targetStarEnabled
-				and not targetPentagonEnabled and not targetOctagonEnabled and not targetDiamondEnabled and not targetCrossEnabled then
+			if not TS.sphere and not TS.square and not TS.cube and not TS.downcone and not TS.ball
+				and not TS.hex and not TS.rect and not TS.box and not TS.pyramid and not TS.cone and not TS.octa and not TS.star
+				and not TS.pentagon and not TS.octagon and not TS.diamond and not TS.cross then
 				local dir = targetPos - part.Position
 				if dir.Magnitude > 0.01 then
-					part.Velocity = dir.Unit * targetAttractionStrength
+					part.Velocity = dir.Unit * ST.targetAttractionStrength
 				end
 			else
-				applyVelocity(part, targetPos, targetAttractionStrength)
+				applyVelocity(part, targetPos, ST.targetAttractionStrength)
 			end
 
-			targetPartsCount += 1
+			ST.targetPartsCount += 1
 		end
 	end
-	lastTargetTriCount = math.max(3, targetPartsCount)
-	TargetPartsLabel.Text = "Parts: " .. targetPartsCount
+	ST.lastTargetTriCount = math.max(3, ST.targetPartsCount)
+	TargetPartsLabel.Text = "Parts: " .. ST.targetPartsCount
 end)
 
 -- ==================== BUTTONS ====================
 local function turnOffLocalShapes()
-	ringPartsEnabled = false
-	localSphereEnabled = false
-	localSquareEnabled = false
-	localCubeEnabled = false
-	localDownConeEnabled = false
-	localBallEnabled = false
-	localHexEnabled = false
-	localRectEnabled = false
-	localBoxEnabled = false
-	localPyramidEnabled = false
-	localConeEnabled = false
-	localOctaEnabled = false
-	localStarEnabled = false
-	localPentagonEnabled = false
-	localOctagonEnabled = false
-	localDiamondEnabled = false
-	localCrossEnabled = false
+	ST.ringPartsEnabled = false
+	LS.sphere = false
+	LS.square = false
+	LS.cube = false
+	LS.downcone = false
+	LS.ball = false
+	LS.hex = false
+	LS.rect = false
+	LS.box = false
+	LS.pyramid = false
+	LS.cone = false
+	LS.octa = false
+	LS.star = false
+	LS.pentagon = false
+	LS.octagon = false
+	LS.diamond = false
+	LS.cross = false
 	threeDPlusShape = nil
-	cursorRingEnabled = false
+	ST.cursorRingEnabled = false
 
 	ToggleButton.Text = "Your Ring  •  Off"
 	ToggleButton.BackgroundColor3 = Color3.fromRGB(160, 40, 40)
@@ -2233,35 +2373,40 @@ function setThreeDPlusShape(shapeName)
 	playSound("12221967")
 end
 
-for shapeName, btn in pairs(ThreeDPlusButtons) do
-	btn.MouseButton1Click:Connect(function()
-		if threeDPlusShape == shapeName then
-			turnOffLocalShapes()
-			ThreeDPlusStatus.Text = "Selected: None"
-		else
-			setThreeDPlusShape(shapeName)
+do
+	local function bindThreeDPlusButtons()
+		for shapeName, btn in pairs(ThreeDPlusButtons) do
+			btn.MouseButton1Click:Connect(function()
+				if threeDPlusShape == shapeName then
+					turnOffLocalShapes()
+					ThreeDPlusStatus.Text = "Selected: None"
+				else
+					setThreeDPlusShape(shapeName)
+				end
+			end)
 		end
-	end)
+	end
+	bindThreeDPlusButtons()
 end
 
 local function turnOffTargetShapes()
-	targetRingEnabled = false
-	targetSphereEnabled = false
-	targetSquareEnabled = false
-	targetCubeEnabled = false
-	targetDownConeEnabled = false
-	targetBallEnabled = false
-	targetHexEnabled = false
-	targetRectEnabled = false
-	targetBoxEnabled = false
-	targetPyramidEnabled = false
-	targetConeEnabled = false
-	targetOctaEnabled = false
-	targetStarEnabled = false
-	targetPentagonEnabled = false
-	targetOctagonEnabled = false
-	targetDiamondEnabled = false
-	targetCrossEnabled = false
+	ST.targetRingEnabled = false
+	TS.sphere = false
+	TS.square = false
+	TS.cube = false
+	TS.downcone = false
+	TS.ball = false
+	TS.hex = false
+	TS.rect = false
+	TS.box = false
+	TS.pyramid = false
+	TS.cone = false
+	TS.octa = false
+	TS.star = false
+	TS.pentagon = false
+	TS.octagon = false
+	TS.diamond = false
+	TS.cross = false
 
 	TargetToggle.Text = "Target Ring  •  Off"
 	TargetToggle.BackgroundColor3 = Color3.fromRGB(160, 40, 40)
@@ -2300,28 +2445,28 @@ local function turnOffTargetShapes()
 end
 
 SpeedModeButton.MouseButton1Click:Connect(function()
-	smoothMode = not smoothMode
-	if smoothMode then
+	ST.smoothMode = not ST.smoothMode
+	if ST.smoothMode then
 		SpeedModeButton.Text = "Mode: Smooth"
 		SpeedModeButton.BackgroundColor3 = Color3.fromRGB(45, 90, 140)
-		attractionStrength = 1100
-		targetAttractionStrength = 1100
-		rotationSpeed = 0.65
-		targetRotationSpeed = 0.65
+		ST.attractionStrength = 1100
+		ST.targetAttractionStrength = 1100
+		ST.rotationSpeed = 0.65
+		ST.targetRotationSpeed = 0.65
 	else
 		SpeedModeButton.Text = "Mode: Aggressive"
 		SpeedModeButton.BackgroundColor3 = Color3.fromRGB(160, 50, 40)
-		attractionStrength = 2200
-		targetAttractionStrength = 2200
-		rotationSpeed = 1.1
-		targetRotationSpeed = 1.1
+		ST.attractionStrength = 2200
+		ST.targetAttractionStrength = 2200
+		ST.rotationSpeed = 1.1
+		ST.targetRotationSpeed = 1.1
 	end
 	playSound("12221967")
 end)
 
 FreezeButton.MouseButton1Click:Connect(function()
-	freezeEnabled = not freezeEnabled
-	if freezeEnabled then
+	ST.freezeEnabled = not ST.freezeEnabled
+	if ST.freezeEnabled then
 		FreezeButton.Text = "Freeze  •  On"
 		FreezeButton.BackgroundColor3 = Color3.fromRGB(40, 140, 70)
 	else
@@ -2336,43 +2481,43 @@ FixedPosButton.MouseButton1Click:Connect(function()
 	local hrp = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
 	if not hrp then return end
 
-	if fixedPosEnabled then
-		fixedPosEnabled = false
-		fixedBasePosition = nil
+	if ST.fixedPosEnabled then
+		ST.fixedPosEnabled = false
+		ST.fixedBasePosition = nil
 		FixedPosButton.Text = "Fixed Pos  •  Off"
 		FixedPosButton.BackgroundColor3 = Color3.fromRGB(40, 70, 110)
-		if fixedMarker then
-			fixedMarker:Destroy()
-			fixedMarker = nil
+		if ST.fixedMarker then
+			ST.fixedMarker:Destroy()
+			ST.fixedMarker = nil
 		end
 	else
-		fixedPosEnabled = true
-		fixedBasePosition = hrp.Position
+		ST.fixedPosEnabled = true
+		ST.fixedBasePosition = hrp.Position
 		FixedPosButton.Text = "Fixed Pos  •  On"
 		FixedPosButton.BackgroundColor3 = Color3.fromRGB(40, 120, 180)
 
-		if fixedMarker then fixedMarker:Destroy() end
-		fixedMarker = Instance.new("Part")
-		fixedMarker.Name = "FixedPosMarker"
-		fixedMarker.Size = Vector3.new(1.4, 1.4, 1.4)
-		fixedMarker.Shape = Enum.PartType.Ball
-		fixedMarker.Material = Enum.Material.Neon
-		fixedMarker.Color = Color3.fromRGB(0, 170, 255)
-		fixedMarker.Transparency = 0.55
-		fixedMarker.Anchored = true
-		fixedMarker.CanCollide = false
-		fixedMarker.CanQuery = false
-		fixedMarker.CanTouch = false
-		fixedMarker.CastShadow = false
-		fixedMarker.Position = fixedBasePosition + Vector3.new(fixedOffsetX, fixedOffsetY, fixedOffsetZ)
-		fixedMarker.Parent = Workspace
+		if ST.fixedMarker then ST.fixedMarker:Destroy() end
+		ST.fixedMarker = Instance.new("Part")
+		ST.fixedMarker.Name = "FixedPosMarker"
+		ST.fixedMarker.Size = Vector3.new(1.4, 1.4, 1.4)
+		ST.fixedMarker.Shape = Enum.PartType.Ball
+		ST.fixedMarker.Material = Enum.Material.Neon
+		ST.fixedMarker.Color = Color3.fromRGB(0, 170, 255)
+		ST.fixedMarker.Transparency = 0.55
+		ST.fixedMarker.Anchored = true
+		ST.fixedMarker.CanCollide = false
+		ST.fixedMarker.CanQuery = false
+		ST.fixedMarker.CanTouch = false
+		ST.fixedMarker.CastShadow = false
+		ST.fixedMarker.Position = ST.fixedBasePosition + Vector3.new(ST.fixedOffsetX, ST.fixedOffsetY, ST.fixedOffsetZ)
+		ST.fixedMarker.Parent = Workspace
 	end
 	playSound("12221967")
 end)
 
 TextToggle.MouseButton1Click:Connect(function()
-	textEnabled = not textEnabled
-	if textEnabled then
+	ST.textEnabled = not ST.textEnabled
+	if ST.textEnabled then
 		turnOffLocalShapes()
 		TextToggle.Text = "Super Text  •  On"
 		TextToggle.BackgroundColor3 = Color3.fromRGB(40, 140, 70)
@@ -2384,12 +2529,12 @@ TextToggle.MouseButton1Click:Connect(function()
 end)
 
 ToggleButton.MouseButton1Click:Connect(function()
-	if cursorRingEnabled or textEnabled then return end
-	if ringPartsEnabled then
+	if ST.cursorRingEnabled or ST.textEnabled then return end
+	if ST.ringPartsEnabled then
 		turnOffLocalShapes()
 	else
 		turnOffLocalShapes()
-		ringPartsEnabled = true
+		ST.ringPartsEnabled = true
 		ToggleButton.Text = "Your Ring  •  On"
 		ToggleButton.BackgroundColor3 = Color3.fromRGB(40, 140, 70)
 	end
@@ -2398,165 +2543,165 @@ end)
 
 local function setLocalShape(shape)
 	turnOffLocalShapes()
-	ringPartsEnabled = true
+	ST.ringPartsEnabled = true
 	ToggleButton.Text = "Your Ring  •  On"
 	ToggleButton.BackgroundColor3 = Color3.fromRGB(40, 140, 70)
 
 	if shape == "triangle" then
-		localSphereEnabled = true
+		LS.sphere = true
 		LocalSphereButton.Text = "Triangle  •  On"
 		LocalSphereButton.BackgroundColor3 = Color3.fromRGB(70, 70, 160)
 	elseif shape == "square" then
-		localSquareEnabled = true
+		LS.square = true
 		LocalSquareButton.Text = "Square  •  On"
 		LocalSquareButton.BackgroundColor3 = Color3.fromRGB(100, 60, 170)
 	elseif shape == "cube" then
-		localCubeEnabled = true
+		LS.cube = true
 		LocalCubeButton.Text = "Cube  •  On"
 		LocalCubeButton.BackgroundColor3 = Color3.fromRGB(50, 110, 160)
 	elseif shape == "downcone" then
-		localDownConeEnabled = true
+		LS.downcone = true
 		LocalDownConeButton.Text = "Down Cone  •  On"
 		LocalDownConeButton.BackgroundColor3 = Color3.fromRGB(160, 60, 50)
 	elseif shape == "sphere" then
-		localBallEnabled = true
+		LS.ball = true
 		LocalBallButton.Text = "Sphere  •  On"
 		LocalBallButton.BackgroundColor3 = Color3.fromRGB(40, 140, 160)
 	elseif shape == "hex" then
-		localHexEnabled = true
+		LS.hex = true
 		LocalHexButton.Text = "Hexagon  •  On"
 		LocalHexButton.BackgroundColor3 = Color3.fromRGB(130, 70, 180)
 	elseif shape == "rect" then
-		localRectEnabled = true
+		LS.rect = true
 		LocalRectButton.Text = "Rectangle  •  On"
 		LocalRectButton.BackgroundColor3 = Color3.fromRGB(80, 130, 70)
 	elseif shape == "box" then
-		localBoxEnabled = true
+		LS.box = true
 		LocalBoxButton.Text = "Box  •  On"
 		LocalBoxButton.BackgroundColor3 = Color3.fromRGB(150, 90, 50)
 	elseif shape == "pyramid" then
-		localPyramidEnabled = true
+		LS.pyramid = true
 		LocalPyramidButton.Text = "Pyramid  •  On"
 		LocalPyramidButton.BackgroundColor3 = Color3.fromRGB(160, 110, 50)
 	elseif shape == "cone" then
-		localConeEnabled = true
+		LS.cone = true
 		LocalConeButton.Text = "Cone  •  On"
 		LocalConeButton.BackgroundColor3 = Color3.fromRGB(100, 140, 70)
 	elseif shape == "octa" then
-		localOctaEnabled = true
+		LS.octa = true
 		LocalOctaButton.Text = "Octahedron  •  On"
 		LocalOctaButton.BackgroundColor3 = Color3.fromRGB(70, 120, 150)
 	elseif shape == "star" then
-		localStarEnabled = true
+		LS.star = true
 		LocalStarButton.Text = "Star  •  On"
 		LocalStarButton.BackgroundColor3 = Color3.fromRGB(200, 150, 40)
 	elseif shape == "pentagon" then
-		localPentagonEnabled = true
+		LS.pentagon = true
 		LocalPentagonButton.Text = "Pentagon  •  On"
 		LocalPentagonButton.BackgroundColor3 = Color3.fromRGB(140, 90, 160)
 	elseif shape == "octagon" then
-		localOctagonEnabled = true
+		LS.octagon = true
 		LocalOctagonButton.Text = "Octagon  •  On"
 		LocalOctagonButton.BackgroundColor3 = Color3.fromRGB(90, 140, 110)
 	elseif shape == "diamond" then
-		localDiamondEnabled = true
+		LS.diamond = true
 		LocalDiamondButton.Text = "Diamond  •  On"
 		LocalDiamondButton.BackgroundColor3 = Color3.fromRGB(160, 80, 120)
 	elseif shape == "cross" then
-		localCrossEnabled = true
+		LS.cross = true
 		LocalCrossButton.Text = "Cross  •  On"
 		LocalCrossButton.BackgroundColor3 = Color3.fromRGB(130, 130, 70)
 	end
 end
 
 LocalSphereButton.MouseButton1Click:Connect(function()
-	if cursorRingEnabled or textEnabled then return end
-	if localSphereEnabled then turnOffLocalShapes() else setLocalShape("triangle") end
+	if ST.cursorRingEnabled or ST.textEnabled then return end
+	if LS.sphere then turnOffLocalShapes() else setLocalShape("triangle") end
 	playSound("12221967")
 end)
 LocalSquareButton.MouseButton1Click:Connect(function()
-	if cursorRingEnabled or textEnabled then return end
-	if localSquareEnabled then turnOffLocalShapes() else setLocalShape("square") end
+	if ST.cursorRingEnabled or ST.textEnabled then return end
+	if LS.square then turnOffLocalShapes() else setLocalShape("square") end
 	playSound("12221967")
 end)
 LocalCubeButton.MouseButton1Click:Connect(function()
-	if cursorRingEnabled or textEnabled then return end
-	if localCubeEnabled then turnOffLocalShapes() else setLocalShape("cube") end
+	if ST.cursorRingEnabled or ST.textEnabled then return end
+	if LS.cube then turnOffLocalShapes() else setLocalShape("cube") end
 	playSound("12221967")
 end)
 LocalDownConeButton.MouseButton1Click:Connect(function()
-	if cursorRingEnabled or textEnabled then return end
-	if localDownConeEnabled then turnOffLocalShapes() else setLocalShape("downcone") end
+	if ST.cursorRingEnabled or ST.textEnabled then return end
+	if LS.downcone then turnOffLocalShapes() else setLocalShape("downcone") end
 	playSound("12221967")
 end)
 LocalBallButton.MouseButton1Click:Connect(function()
-	if cursorRingEnabled or textEnabled then return end
-	if localBallEnabled then turnOffLocalShapes() else setLocalShape("sphere") end
+	if ST.cursorRingEnabled or ST.textEnabled then return end
+	if LS.ball then turnOffLocalShapes() else setLocalShape("sphere") end
 	playSound("12221967")
 end)
 LocalHexButton.MouseButton1Click:Connect(function()
-	if cursorRingEnabled or textEnabled then return end
-	if localHexEnabled then turnOffLocalShapes() else setLocalShape("hex") end
+	if ST.cursorRingEnabled or ST.textEnabled then return end
+	if LS.hex then turnOffLocalShapes() else setLocalShape("hex") end
 	playSound("12221967")
 end)
 LocalRectButton.MouseButton1Click:Connect(function()
-	if cursorRingEnabled or textEnabled then return end
-	if localRectEnabled then turnOffLocalShapes() else setLocalShape("rect") end
+	if ST.cursorRingEnabled or ST.textEnabled then return end
+	if LS.rect then turnOffLocalShapes() else setLocalShape("rect") end
 	playSound("12221967")
 end)
 LocalBoxButton.MouseButton1Click:Connect(function()
-	if cursorRingEnabled or textEnabled then return end
-	if localBoxEnabled then turnOffLocalShapes() else setLocalShape("box") end
+	if ST.cursorRingEnabled or ST.textEnabled then return end
+	if LS.box then turnOffLocalShapes() else setLocalShape("box") end
 	playSound("12221967")
 end)
 LocalPyramidButton.MouseButton1Click:Connect(function()
-	if cursorRingEnabled or textEnabled then return end
-	if localPyramidEnabled then turnOffLocalShapes() else setLocalShape("pyramid") end
+	if ST.cursorRingEnabled or ST.textEnabled then return end
+	if LS.pyramid then turnOffLocalShapes() else setLocalShape("pyramid") end
 	playSound("12221967")
 end)
 LocalConeButton.MouseButton1Click:Connect(function()
-	if cursorRingEnabled or textEnabled then return end
-	if localConeEnabled then turnOffLocalShapes() else setLocalShape("cone") end
+	if ST.cursorRingEnabled or ST.textEnabled then return end
+	if LS.cone then turnOffLocalShapes() else setLocalShape("cone") end
 	playSound("12221967")
 end)
 LocalOctaButton.MouseButton1Click:Connect(function()
-	if cursorRingEnabled or textEnabled then return end
-	if localOctaEnabled then turnOffLocalShapes() else setLocalShape("octa") end
+	if ST.cursorRingEnabled or ST.textEnabled then return end
+	if LS.octa then turnOffLocalShapes() else setLocalShape("octa") end
 	playSound("12221967")
 end)
 LocalStarButton.MouseButton1Click:Connect(function()
-	if cursorRingEnabled or textEnabled then return end
-	if localStarEnabled then turnOffLocalShapes() else setLocalShape("star") end
+	if ST.cursorRingEnabled or ST.textEnabled then return end
+	if LS.star then turnOffLocalShapes() else setLocalShape("star") end
 	playSound("12221967")
 end)
 LocalPentagonButton.MouseButton1Click:Connect(function()
-	if cursorRingEnabled or textEnabled then return end
-	if localPentagonEnabled then turnOffLocalShapes() else setLocalShape("pentagon") end
+	if ST.cursorRingEnabled or ST.textEnabled then return end
+	if LS.pentagon then turnOffLocalShapes() else setLocalShape("pentagon") end
 	playSound("12221967")
 end)
 LocalOctagonButton.MouseButton1Click:Connect(function()
-	if cursorRingEnabled or textEnabled then return end
-	if localOctagonEnabled then turnOffLocalShapes() else setLocalShape("octagon") end
+	if ST.cursorRingEnabled or ST.textEnabled then return end
+	if LS.octagon then turnOffLocalShapes() else setLocalShape("octagon") end
 	playSound("12221967")
 end)
 LocalDiamondButton.MouseButton1Click:Connect(function()
-	if cursorRingEnabled or textEnabled then return end
-	if localDiamondEnabled then turnOffLocalShapes() else setLocalShape("diamond") end
+	if ST.cursorRingEnabled or ST.textEnabled then return end
+	if LS.diamond then turnOffLocalShapes() else setLocalShape("diamond") end
 	playSound("12221967")
 end)
 LocalCrossButton.MouseButton1Click:Connect(function()
-	if cursorRingEnabled or textEnabled then return end
-	if localCrossEnabled then turnOffLocalShapes() else setLocalShape("cross") end
+	if ST.cursorRingEnabled or ST.textEnabled then return end
+	if LS.cross then turnOffLocalShapes() else setLocalShape("cross") end
 	playSound("12221967")
 end)
 
 CursorButton.MouseButton1Click:Connect(function()
-	if textEnabled then return end
-	cursorRingEnabled = not cursorRingEnabled
-	if cursorRingEnabled then
+	if ST.textEnabled then return end
+	ST.cursorRingEnabled = not ST.cursorRingEnabled
+	if ST.cursorRingEnabled then
 		turnOffLocalShapes()
-		cursorRingEnabled = true
-		radius = 200
+		ST.cursorRingEnabled = true
+		ST.radius = 200
 		RadiusDisplay.Text = "Radius: 200"
 		CursorButton.Text = "Cursor Follow  •  On"
 		CursorButton.BackgroundColor3 = Color3.fromRGB(40, 140, 70)
@@ -2568,221 +2713,620 @@ CursorButton.MouseButton1Click:Connect(function()
 end)
 
 DecreaseRadius.MouseButton1Click:Connect(function()
-	radius = math.max(0, radius - 5)
-	RadiusDisplay.Text = "Radius: " .. radius
+	ST.radius = math.max(0, ST.radius - 5)
+	RadiusDisplay.Text = "Radius: " .. ST.radius
 	playSound("12221967")
 end)
 IncreaseRadius.MouseButton1Click:Connect(function()
-	radius = math.min(10000, radius + 5)
-	RadiusDisplay.Text = "Radius: " .. radius
+	ST.radius = math.min(10000, ST.radius + 5)
+	RadiusDisplay.Text = "Radius: " .. ST.radius
 	playSound("12221967")
 end)
 
 DecreasePixel.MouseButton1Click:Connect(function()
-	textPixelSize = math.max(1.5, textPixelSize - 0.5)
-	PixelDisplay.Text = "Pixel Size: " .. string.format("%.1f", textPixelSize)
-	currentTextPoints = getTextPoints(textString)
+	ST.textPixelSize = math.max(1.5, ST.textPixelSize - 0.5)
+	PixelDisplay.Text = "Pixel Size: " .. string.format("%.1f", ST.textPixelSize)
+	currentTextPoints = getTextPoints(ST.textString)
 	playSound("12221967")
 end)
 IncreasePixel.MouseButton1Click:Connect(function()
-	textPixelSize = math.min(12, textPixelSize + 0.5)
-	PixelDisplay.Text = "Pixel Size: " .. string.format("%.1f", textPixelSize)
-	currentTextPoints = getTextPoints(textString)
+	ST.textPixelSize = math.min(12, ST.textPixelSize + 0.5)
+	PixelDisplay.Text = "Pixel Size: " .. string.format("%.1f", ST.textPixelSize)
+	currentTextPoints = getTextPoints(ST.textString)
 	playSound("12221967")
 end)
 
 function findPlayer(name)
-	if not name or name == "" then return nil end
-	name = string.lower(name)
+	if not name then return nil end
+	name = tostring(name):gsub("^%s+", ""):gsub("%s+$", "")
+	if name == "" then return nil end
+	local lower = string.lower(name)
+
+	-- 1) Exact Username match
 	for _, plr in pairs(Players:GetPlayers()) do
-		if string.find(string.lower(plr.Name), name, 1, true) or string.find(string.lower(plr.DisplayName), name, 1, true) then
+		if plr ~= LocalPlayer and string.lower(plr.Name) == lower then
 			return plr
+		end
+	end
+	-- 2) Exact DisplayName match
+	for _, plr in pairs(Players:GetPlayers()) do
+		if plr ~= LocalPlayer and string.lower(plr.DisplayName) == lower then
+			return plr
+		end
+	end
+	-- 3) Partial Username (starts with)
+	for _, plr in pairs(Players:GetPlayers()) do
+		if plr ~= LocalPlayer and string.sub(string.lower(plr.Name), 1, #lower) == lower then
+			return plr
+		end
+	end
+	-- 4) Partial DisplayName (starts with)
+	for _, plr in pairs(Players:GetPlayers()) do
+		if plr ~= LocalPlayer and string.sub(string.lower(plr.DisplayName), 1, #lower) == lower then
+			return plr
+		end
+	end
+	-- 5) Contains in Username or DisplayName
+	for _, plr in pairs(Players:GetPlayers()) do
+		if plr ~= LocalPlayer then
+			if string.find(string.lower(plr.Name), lower, 1, true)
+				or string.find(string.lower(plr.DisplayName), lower, 1, true) then
+				return plr
+			end
 		end
 	end
 	return nil
 end
 
+function resolveTargetPlayer(preferBox)
+	-- Prefer NameBox text when the user typed something
+	local boxText = NameBox and NameBox.Text or ""
+	boxText = tostring(boxText):gsub("^%s+", ""):gsub("%s+$", "")
+	if preferBox and boxText ~= "" then
+		local found = findPlayer(boxText)
+		if found then return found end
+	end
+	-- Fall back to current target if still in the server
+	if ST.targetPlayer and ST.targetPlayer.Parent == Players then
+		return ST.targetPlayer
+	end
+	-- Last resort: try box again
+	if boxText ~= "" then
+		return findPlayer(boxText)
+	end
+	return nil
+end
+
+function getTargetRoot(plr)
+	if not plr then return nil, nil end
+	local char = plr.Character
+	if not char then return nil, nil end
+	local root = char:FindFirstChild("HumanoidRootPart")
+		or char:FindFirstChild("UpperTorso")
+		or char:FindFirstChild("Torso")
+		or char.PrimaryPart
+	if not root then
+		local hum = char:FindFirstChildOfClass("Humanoid")
+		if hum and hum.RootPart then
+			root = hum.RootPart
+		end
+	end
+	return char, root
+end
+
+function isTargetModeOn()
+	return ST.targetRingEnabled or TS.sphere or TS.square or TS.cube
+		or TS.downcone or TS.ball or TS.hex or TS.rect
+		or TS.box or TS.pyramid or TS.cone or TS.octa
+		or TS.star or TS.pentagon or TS.octagon or TS.diamond
+		or TS.cross
+end
+
+function syncPrimaryTarget()
+	-- Keep ST.targetPlayer as the first valid entry for UI / spectate
+	if #ST.targetPlayers > 0 then
+		ST.targetPlayer = ST.targetPlayers[1]
+	end
+end
+
+function addToMultiTarget(plr)
+	if not plr or plr == LocalPlayer then return false end
+	for _, p in ipairs(ST.targetPlayers) do
+		if p == plr then return false end
+	end
+	if #ST.targetPlayers >= ST.maxMultiTargets then
+		table.remove(ST.targetPlayers, 1)
+	end
+	table.insert(ST.targetPlayers, plr)
+	syncPrimaryTarget()
+	return true
+end
+
+function setSingleTarget(plr)
+	ST.targetPlayers = {}
+	if plr then
+		table.insert(ST.targetPlayers, plr)
+	end
+	ST.targetPlayer = plr
+end
+
+function getActiveTargetRoots()
+	local roots = {}
+	-- prune dead
+	local alive = {}
+	for _, plr in ipairs(ST.targetPlayers) do
+		if plr and plr.Parent == Players then
+			table.insert(alive, plr)
+		end
+	end
+	ST.targetPlayers = alive
+	syncPrimaryTarget()
+
+	local list = ST.targetPlayers
+	if #list == 0 and ST.targetPlayer and ST.targetPlayer.Parent == Players then
+		list = { ST.targetPlayer }
+	end
+	for _, plr in ipairs(list) do
+		local char, root = getTargetRoot(plr)
+		if char and root then
+			table.insert(roots, { plr = plr, char = char, root = root, center = root.Position })
+		end
+	end
+	return roots
+end
+
+function findNearestPlayer()
+	local myChar = LocalPlayer.Character
+	local myRoot = myChar and (myChar:FindFirstChild("HumanoidRootPart") or myChar:FindFirstChild("Head"))
+	if not myRoot then return nil end
+	local best, bestD = nil, math.huge
+	for _, plr in ipairs(Players:GetPlayers()) do
+		if plr ~= LocalPlayer then
+			local _, root = getTargetRoot(plr)
+			if root then
+				local d = (root.Position - myRoot.Position).Magnitude
+				if d < bestD then
+					bestD = d
+					best = plr
+				end
+			end
+		end
+	end
+	return best
+end
+
+function updateMultiBtn()
+	if ST.multiTargetEnabled then
+		MultiTargetBtn.Text = string.format("Multi (%d/%d)  •  On", #ST.targetPlayers, ST.maxMultiTargets)
+		MultiTargetBtn.BackgroundColor3 = Color3.fromRGB(40, 140, 70)
+	else
+		MultiTargetBtn.Text = string.format("Multi (%d/%d)  •  Off", #ST.targetPlayers, ST.maxMultiTargets)
+		MultiTargetBtn.BackgroundColor3 = Color3.fromRGB(50, 50, 60)
+	end
+end
+
+function refreshPlayerList()
+	for _, child in ipairs(PlayerListFrame:GetChildren()) do
+		if child:IsA("TextButton") then child:Destroy() end
+	end
+	local order = 0
+	for _, plr in ipairs(Players:GetPlayers()) do
+		if plr ~= LocalPlayer then
+			order += 1
+			local btn = Instance.new("TextButton")
+			btn.Size = UDim2.new(1, -8, 0, 26)
+			btn.BackgroundColor3 = Color3.fromRGB(35, 35, 45)
+			btn.Text = (plr.DisplayName or plr.Name) .. "  (@" .. plr.Name .. ")"
+			btn.TextColor3 = Color3.fromRGB(230, 230, 240)
+			btn.Font = Enum.Font.Gotham
+			btn.TextSize = 12
+			btn.TextXAlignment = Enum.TextXAlignment.Left
+			btn.LayoutOrder = order
+			btn.Parent = PlayerListFrame
+			Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 5)
+			local pad = Instance.new("UIPadding")
+			pad.PaddingLeft = UDim.new(0, 8)
+			pad.Parent = btn
+			btn.MouseButton1Click:Connect(function()
+				NameBox.Text = plr.Name
+				if ST.multiTargetEnabled then
+					addToMultiTarget(plr)
+					updateMultiBtn()
+				else
+					setSingleTarget(plr)
+				end
+				if not isTargetModeOn() then
+					turnOffTargetShapes()
+					ST.targetRingEnabled = true
+				end
+				TargetToggle.Text = "Target Ring  •  On (" .. (plr.DisplayName or plr.Name) .. ")"
+				TargetToggle.BackgroundColor3 = Color3.fromRGB(40, 140, 70)
+				PlayerListFrame.Visible = false
+				PlayersListBtn.Text = "Players list  ▼"
+				playSound("12221967")
+				pcall(function()
+					StarterGui:SetCore("SendNotification", {
+						Title = "Target",
+						Text = (ST.multiTargetEnabled and "Added " or "Targeting ") .. (plr.DisplayName or plr.Name),
+						Duration = 2,
+					})
+				end)
+			end)
+		end
+	end
+	PlayerListFrame.CanvasSize = UDim2.new(0, 0, 0, math.max(110, order * 30 + 8))
+end
+
 TargetToggle.MouseButton1Click:Connect(function()
-	local found = targetPlayer or findPlayer(NameBox.Text)
-	if not found then
-		StarterGui:SetCore("SendNotification", {Title="Target", Text="Player not found!", Duration=3})
+	if isTargetModeOn() then
+		turnOffTargetShapes()
+		playSound("12221967")
 		return
 	end
-	targetPlayer = found
-	if targetRingEnabled then
-		turnOffTargetShapes()
-	else
-		turnOffTargetShapes()
-		targetRingEnabled = true
-		TargetToggle.Text = "Target Ring  •  On"
-		TargetToggle.BackgroundColor3 = Color3.fromRGB(40, 140, 70)
+	local found = resolveTargetPlayer(true) or findNearestPlayer()
+	if not found then
+		pcall(function()
+			StarterGui:SetCore("SendNotification", {Title="Target", Text="Player not found! Pick from list or type a name.", Duration=3})
+		end)
+		return
 	end
+	if ST.multiTargetEnabled then
+		addToMultiTarget(found)
+		updateMultiBtn()
+	else
+		setSingleTarget(found)
+	end
+	turnOffTargetShapes()
+	ST.targetRingEnabled = true
+	TargetToggle.Text = "Target Ring  •  On (" .. (found.DisplayName or found.Name) .. ")"
+	TargetToggle.BackgroundColor3 = Color3.fromRGB(40, 140, 70)
 	playSound("12221967")
 end)
 
 local function setTargetShape(shape)
-	local found = targetPlayer or findPlayer(NameBox.Text)
+	local found = resolveTargetPlayer(true) or ST.targetPlayer or findNearestPlayer()
 	if not found then
-		StarterGui:SetCore("SendNotification", {Title="Target", Text="Player not found!", Duration=3})
+		pcall(function()
+			StarterGui:SetCore("SendNotification", {Title="Target", Text="Player not found! Pick from list or type a name.", Duration=3})
+		end)
 		return
 	end
-	targetPlayer = found
+	if ST.multiTargetEnabled then
+		addToMultiTarget(found)
+		updateMultiBtn()
+	else
+		setSingleTarget(found)
+	end
 	turnOffTargetShapes()
-	targetRingEnabled = true
-	TargetToggle.Text = "Target Ring  •  On"
+	ST.targetRingEnabled = true
+	TargetToggle.Text = "Target Ring  •  On (" .. (found.DisplayName or found.Name) .. ")"
 	TargetToggle.BackgroundColor3 = Color3.fromRGB(40, 140, 70)
 
 	if shape == "triangle" then
-		targetSphereEnabled = true
+		TS.sphere = true
 		TargetSphereButton.Text = "Triangle  •  On"
 		TargetSphereButton.BackgroundColor3 = Color3.fromRGB(70, 70, 160)
 	elseif shape == "square" then
-		targetSquareEnabled = true
+		TS.square = true
 		TargetSquareButton.Text = "Square  •  On"
 		TargetSquareButton.BackgroundColor3 = Color3.fromRGB(100, 60, 170)
 	elseif shape == "cube" then
-		targetCubeEnabled = true
+		TS.cube = true
 		TargetCubeButton.Text = "Cube  •  On"
 		TargetCubeButton.BackgroundColor3 = Color3.fromRGB(50, 110, 160)
 	elseif shape == "downcone" then
-		targetDownConeEnabled = true
+		TS.downcone = true
 		TargetDownConeButton.Text = "Down Cone  •  On"
 		TargetDownConeButton.BackgroundColor3 = Color3.fromRGB(160, 60, 50)
 	elseif shape == "sphere" then
-		targetBallEnabled = true
+		TS.ball = true
 		TargetBallButton.Text = "Sphere  •  On"
 		TargetBallButton.BackgroundColor3 = Color3.fromRGB(40, 140, 160)
 	elseif shape == "hex" then
-		targetHexEnabled = true
+		TS.hex = true
 		TargetHexButton.Text = "Hexagon  •  On"
 		TargetHexButton.BackgroundColor3 = Color3.fromRGB(130, 70, 180)
 	elseif shape == "rect" then
-		targetRectEnabled = true
+		TS.rect = true
 		TargetRectButton.Text = "Rectangle  •  On"
 		TargetRectButton.BackgroundColor3 = Color3.fromRGB(80, 130, 70)
 	elseif shape == "box" then
-		targetBoxEnabled = true
+		TS.box = true
 		TargetBoxButton.Text = "Box  •  On"
 		TargetBoxButton.BackgroundColor3 = Color3.fromRGB(150, 90, 50)
 	elseif shape == "pyramid" then
-		targetPyramidEnabled = true
+		TS.pyramid = true
 		TargetPyramidButton.Text = "Pyramid  •  On"
 		TargetPyramidButton.BackgroundColor3 = Color3.fromRGB(160, 110, 50)
 	elseif shape == "cone" then
-		targetConeEnabled = true
+		TS.cone = true
 		TargetConeButton.Text = "Cone  •  On"
 		TargetConeButton.BackgroundColor3 = Color3.fromRGB(100, 140, 70)
 	elseif shape == "octa" then
-		targetOctaEnabled = true
+		TS.octa = true
 		TargetOctaButton.Text = "Octahedron  •  On"
 		TargetOctaButton.BackgroundColor3 = Color3.fromRGB(70, 120, 150)
 	elseif shape == "star" then
-		targetStarEnabled = true
+		TS.star = true
 		TargetStarButton.Text = "Star  •  On"
 		TargetStarButton.BackgroundColor3 = Color3.fromRGB(200, 150, 40)
 	elseif shape == "pentagon" then
-		targetPentagonEnabled = true
+		TS.pentagon = true
 		TargetPentagonButton.Text = "Pentagon  •  On"
 		TargetPentagonButton.BackgroundColor3 = Color3.fromRGB(140, 90, 160)
 	elseif shape == "octagon" then
-		targetOctagonEnabled = true
+		TS.octagon = true
 		TargetOctagonButton.Text = "Octagon  •  On"
 		TargetOctagonButton.BackgroundColor3 = Color3.fromRGB(90, 140, 110)
 	elseif shape == "diamond" then
-		targetDiamondEnabled = true
+		TS.diamond = true
 		TargetDiamondButton.Text = "Diamond  •  On"
 		TargetDiamondButton.BackgroundColor3 = Color3.fromRGB(160, 80, 120)
 	elseif shape == "cross" then
-		targetCrossEnabled = true
+		TS.cross = true
 		TargetCrossButton.Text = "Cross  •  On"
 		TargetCrossButton.BackgroundColor3 = Color3.fromRGB(130, 130, 70)
 	end
 end
 
 TargetSphereButton.MouseButton1Click:Connect(function()
-	if targetSphereEnabled then turnOffTargetShapes() else setTargetShape("triangle") end
+	if TS.sphere then turnOffTargetShapes() else setTargetShape("triangle") end
 	playSound("12221967")
 end)
 TargetSquareButton.MouseButton1Click:Connect(function()
-	if targetSquareEnabled then turnOffTargetShapes() else setTargetShape("square") end
+	if TS.square then turnOffTargetShapes() else setTargetShape("square") end
 	playSound("12221967")
 end)
 TargetCubeButton.MouseButton1Click:Connect(function()
-	if targetCubeEnabled then turnOffTargetShapes() else setTargetShape("cube") end
+	if TS.cube then turnOffTargetShapes() else setTargetShape("cube") end
 	playSound("12221967")
 end)
 TargetDownConeButton.MouseButton1Click:Connect(function()
-	if targetDownConeEnabled then turnOffTargetShapes() else setTargetShape("downcone") end
+	if TS.downcone then turnOffTargetShapes() else setTargetShape("downcone") end
 	playSound("12221967")
 end)
 TargetBallButton.MouseButton1Click:Connect(function()
-	if targetBallEnabled then turnOffTargetShapes() else setTargetShape("sphere") end
+	if TS.ball then turnOffTargetShapes() else setTargetShape("sphere") end
 	playSound("12221967")
 end)
 TargetHexButton.MouseButton1Click:Connect(function()
-	if targetHexEnabled then turnOffTargetShapes() else setTargetShape("hex") end
+	if TS.hex then turnOffTargetShapes() else setTargetShape("hex") end
 	playSound("12221967")
 end)
 TargetRectButton.MouseButton1Click:Connect(function()
-	if targetRectEnabled then turnOffTargetShapes() else setTargetShape("rect") end
+	if TS.rect then turnOffTargetShapes() else setTargetShape("rect") end
 	playSound("12221967")
 end)
 TargetBoxButton.MouseButton1Click:Connect(function()
-	if targetBoxEnabled then turnOffTargetShapes() else setTargetShape("box") end
+	if TS.box then turnOffTargetShapes() else setTargetShape("box") end
 	playSound("12221967")
 end)
 TargetPyramidButton.MouseButton1Click:Connect(function()
-	if targetPyramidEnabled then turnOffTargetShapes() else setTargetShape("pyramid") end
+	if TS.pyramid then turnOffTargetShapes() else setTargetShape("pyramid") end
 	playSound("12221967")
 end)
 TargetConeButton.MouseButton1Click:Connect(function()
-	if targetConeEnabled then turnOffTargetShapes() else setTargetShape("cone") end
+	if TS.cone then turnOffTargetShapes() else setTargetShape("cone") end
 	playSound("12221967")
 end)
 TargetOctaButton.MouseButton1Click:Connect(function()
-	if targetOctaEnabled then turnOffTargetShapes() else setTargetShape("octa") end
+	if TS.octa then turnOffTargetShapes() else setTargetShape("octa") end
 	playSound("12221967")
 end)
 TargetStarButton.MouseButton1Click:Connect(function()
-	if targetStarEnabled then turnOffTargetShapes() else setTargetShape("star") end
+	if TS.star then turnOffTargetShapes() else setTargetShape("star") end
 	playSound("12221967")
 end)
 TargetPentagonButton.MouseButton1Click:Connect(function()
-	if targetPentagonEnabled then turnOffTargetShapes() else setTargetShape("pentagon") end
+	if TS.pentagon then turnOffTargetShapes() else setTargetShape("pentagon") end
 	playSound("12221967")
 end)
 TargetOctagonButton.MouseButton1Click:Connect(function()
-	if targetOctagonEnabled then turnOffTargetShapes() else setTargetShape("octagon") end
+	if TS.octagon then turnOffTargetShapes() else setTargetShape("octagon") end
 	playSound("12221967")
 end)
 TargetDiamondButton.MouseButton1Click:Connect(function()
-	if targetDiamondEnabled then turnOffTargetShapes() else setTargetShape("diamond") end
+	if TS.diamond then turnOffTargetShapes() else setTargetShape("diamond") end
 	playSound("12221967")
 end)
 TargetCrossButton.MouseButton1Click:Connect(function()
-	if targetCrossEnabled then turnOffTargetShapes() else setTargetShape("cross") end
+	if TS.cross then turnOffTargetShapes() else setTargetShape("cross") end
 	playSound("12221967")
 end)
 
 TargetDecrease.MouseButton1Click:Connect(function()
-	targetRadius = math.max(0, targetRadius - 5)
-	TargetRadiusDisplay.Text = "Radius: " .. targetRadius
+	ST.targetRadius = math.max(0, ST.targetRadius - 5)
+	TargetRadiusDisplay.Text = "Radius: " .. ST.targetRadius
 	playSound("12221967")
 end)
 TargetIncrease.MouseButton1Click:Connect(function()
-	targetRadius = math.min(10000, targetRadius + 5)
-	TargetRadiusDisplay.Text = "Radius: " .. targetRadius
+	ST.targetRadius = math.min(10000, ST.targetRadius + 5)
+	TargetRadiusDisplay.Text = "Radius: " .. ST.targetRadius
 	playSound("12221967")
 end)
 
+
+-- Keep targeting reliable across leaves / respawns
+Players.PlayerRemoving:Connect(function(plr)
+	local removed = false
+	for i = #ST.targetPlayers, 1, -1 do
+		if ST.targetPlayers[i] == plr then
+			table.remove(ST.targetPlayers, i)
+			removed = true
+		end
+	end
+	if plr == ST.targetPlayer then
+		ST.targetPlayer = nil
+		removed = true
+	end
+	if removed then
+		syncPrimaryTarget()
+		updateMultiBtn()
+		if #ST.targetPlayers == 0 then
+			turnOffTargetShapes()
+		end
+		pcall(function()
+			StarterGui:SetCore("SendNotification", {Title="Target", Text=(plr.DisplayName or plr.Name) .. " left", Duration=2})
+		end)
+	end
+end)
+
+-- Auto-refresh NameBox suggestions aren't needed; re-resolve if box changes while active
+NameBox.FocusLost:Connect(function(enter)
+	if not enter then return end
+	if not (ST.targetRingEnabled or TS.sphere or TS.square or TS.cube
+		or TS.downcone or TS.ball or TS.hex or TS.rect
+		or TS.box or TS.pyramid or TS.cone or TS.octa
+		or TS.star or TS.pentagon or TS.octagon or TS.diamond
+		or TS.cross) then
+		return
+	end
+	local found = resolveTargetPlayer(true)
+	if found then
+		ST.targetPlayer = found
+		TargetToggle.Text = "Target Ring  •  On (" .. (found.DisplayName or found.Name) .. ")"
+		pcall(function()
+			StarterGui:SetCore("SendNotification", {Title="Target", Text="Now targeting " .. (found.DisplayName or found.Name), Duration=2})
+		end)
+	end
+end)
+
+
+-- ==================== PLAYERS LIST / AUTO / MULTI / SPECTATE / UI KEY ====================
+PlayersListBtn.MouseButton1Click:Connect(function()
+	PlayerListFrame.Visible = not PlayerListFrame.Visible
+	if PlayerListFrame.Visible then
+		PlayersListBtn.Text = "Players list  ▲"
+		refreshPlayerList()
+	else
+		PlayersListBtn.Text = "Players list  ▼"
+	end
+	playSound("12221967")
+end)
+
+RefreshPlayersBtn.MouseButton1Click:Connect(function()
+	refreshPlayerList()
+	PlayerListFrame.Visible = true
+	PlayersListBtn.Text = "Players list  ▲"
+	playSound("12221967")
+end)
+
+AutoTargetBtn.MouseButton1Click:Connect(function()
+	ST.autoTargetNearest = not ST.autoTargetNearest
+	if ST.autoTargetNearest then
+		AutoTargetBtn.Text = "Auto nearest  •  On"
+		AutoTargetBtn.BackgroundColor3 = Color3.fromRGB(40, 140, 70)
+		local n = findNearestPlayer()
+		if n then
+			if ST.multiTargetEnabled then addToMultiTarget(n) else setSingleTarget(n) end
+			if not isTargetModeOn() then
+				turnOffTargetShapes()
+				ST.targetRingEnabled = true
+			end
+			TargetToggle.Text = "Target Ring  •  On (" .. (n.DisplayName or n.Name) .. ")"
+			TargetToggle.BackgroundColor3 = Color3.fromRGB(40, 140, 70)
+			updateMultiBtn()
+		end
+	else
+		AutoTargetBtn.Text = "Auto nearest  •  Off"
+		AutoTargetBtn.BackgroundColor3 = Color3.fromRGB(50, 50, 60)
+	end
+	playSound("12221967")
+end)
+
+MultiTargetBtn.MouseButton1Click:Connect(function()
+	ST.multiTargetEnabled = not ST.multiTargetEnabled
+	if not ST.multiTargetEnabled then
+		-- keep only primary
+		if ST.targetPlayer then
+			setSingleTarget(ST.targetPlayer)
+		else
+			ST.targetPlayers = {}
+		end
+	elseif ST.targetPlayer then
+		addToMultiTarget(ST.targetPlayer)
+	end
+	updateMultiBtn()
+	playSound("12221967")
+end)
+
+SpectateBtn.MouseButton1Click:Connect(function()
+	ST.spectateEnabled = not ST.spectateEnabled
+	if ST.spectateEnabled then
+		SpectateBtn.Text = "Spectate  •  On"
+		SpectateBtn.BackgroundColor3 = Color3.fromRGB(40, 140, 70)
+	else
+		SpectateBtn.Text = "Spectate  •  Off"
+		SpectateBtn.BackgroundColor3 = Color3.fromRGB(50, 50, 60)
+		pcall(function()
+			local cam = workspace.CurrentCamera
+			if cam and LocalPlayer.Character then
+				local hum = LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
+				if hum then cam.CameraSubject = hum end
+			end
+		end)
+	end
+	playSound("12221967")
+end)
+
+-- Spectate camera follow
+RunService.RenderStepped:Connect(function()
+	if not ST.spectateEnabled then return end
+	local plr = ST.targetPlayer
+	if ST.multiTargetEnabled and #ST.targetPlayers > 0 then
+		plr = ST.targetPlayers[1]
+	end
+	if not plr then return end
+	local _, root = getTargetRoot(plr)
+	if not root then return end
+	local cam = workspace.CurrentCamera
+	if not cam then return end
+	cam.CameraType = Enum.CameraType.Custom
+	local hum = plr.Character and plr.Character:FindFirstChildOfClass("Humanoid")
+	if hum then
+		cam.CameraSubject = hum
+	else
+		cam.CameraSubject = root
+	end
+end)
+
+-- UI toggle key (RightShift) — show/hide whole menu; if minimized, restore first
+UserInputService.InputBegan:Connect(function(input, gpe)
+	if gpe then return end
+	if input.KeyCode == Enum.KeyCode.RightShift then
+		if minimized and Main.Visible then
+			-- bring full UI back
+			setMinimized(false)
+			ST.uiVisible = true
+		else
+			ST.uiVisible = not ST.uiVisible
+			Main.Visible = ST.uiVisible
+			if ST.uiVisible and minimized then
+				setMinimized(false)
+			end
+		end
+		playSound("12221967")
+	end
+end)
+
+Players.PlayerAdded:Connect(function()
+	if PlayerListFrame.Visible then
+		task.defer(refreshPlayerList)
+	end
+end)
+
+-- Title hint
+Title.Text = "gab's Rings  •  v2.9  |  RShift = UI"
+
 pcall(function()
 	local userId = Players:GetUserIdFromNameAsync("Gabrieltod112")
-	local content = Players:GetUserThumbnailAsync(userId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size420x420)
+	local thumb = Players:GetUserThumbnailAsync(userId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size420x420)
 	StarterGui:SetCore("SendNotification", {
-		Title = "gabs super ring v2.8",
-		Text = "Fixed Pos + X/Y/Z offset sliders!",
-		Icon = content,
+		Title = "gabs super ring v2.9",
+		Text = "Player list · Auto · Multi · Spectate · RShift UI",
+		Icon = thumb,
 		Duration = 5
 	})
 end)
+
 
