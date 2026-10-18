@@ -64,36 +64,45 @@ local Main = Instance.new("Frame")
 Main.Name = "Main"
 Main.Size = UDim2.new(0, 540, 0, 420)
 Main.Position = UDim2.new(0.5, -270, 0.5, -210)
-Main.BackgroundColor3 = Color3.fromRGB(16, 16, 18)
+Main.BackgroundColor3 = Color3.fromRGB(12, 12, 16)
 Main.BorderSizePixel = 0
 Main.ClipsDescendants = true
 Main.Parent = ScreenGui
-Instance.new("UICorner", Main).CornerRadius = UDim.new(0, 12)
+Instance.new("UICorner", Main).CornerRadius = UDim.new(0, 14)
 
 local Stroke = Instance.new("UIStroke", Main)
-Stroke.Color = Color3.fromRGB(40, 40, 48)
-Stroke.Thickness = 1.2
+Stroke.Color = Color3.fromRGB(70, 45, 95)
+Stroke.Thickness = 1.4
+Stroke.Transparency = 0.15
 
 local TitleBar = Instance.new("Frame")
 TitleBar.Size = UDim2.new(1, 0, 0, 38)
-TitleBar.BackgroundColor3 = Color3.fromRGB(22, 22, 26)
+TitleBar.BackgroundColor3 = Color3.fromRGB(18, 16, 24)
 TitleBar.BorderSizePixel = 0
 TitleBar.Parent = Main
-Instance.new("UICorner", TitleBar).CornerRadius = UDim.new(0, 12)
+Instance.new("UICorner", TitleBar).CornerRadius = UDim.new(0, 14)
 
 local TitleFix = Instance.new("Frame")
 TitleFix.Size = UDim2.new(1, 0, 0, 12)
 TitleFix.Position = UDim2.new(0, 0, 1, -12)
-TitleFix.BackgroundColor3 = Color3.fromRGB(22, 22, 26)
+TitleFix.BackgroundColor3 = Color3.fromRGB(18, 16, 24)
 TitleFix.BorderSizePixel = 0
 TitleFix.Parent = TitleBar
+
+-- Accent strip under title
+local TitleAccent = Instance.new("Frame")
+TitleAccent.Size = UDim2.new(1, 0, 0, 2)
+TitleAccent.Position = UDim2.new(0, 0, 1, -2)
+TitleAccent.BackgroundColor3 = Color3.fromRGB(140, 70, 200)
+TitleAccent.BorderSizePixel = 0
+TitleAccent.Parent = TitleBar
 
 local Title = Instance.new("TextLabel")
 Title.Size = UDim2.new(1, -80, 1, 0)
 Title.Position = UDim2.new(0, 14, 0, 0)
 Title.BackgroundTransparency = 1
-Title.Text = "gab's Rings  •  v2.8"
-Title.TextColor3 = Color3.fromRGB(240, 240, 245)
+Title.Text = "gab's Rings  •  v2.9"
+Title.TextColor3 = Color3.fromRGB(245, 240, 255)
 Title.Font = Enum.Font.GothamBold
 Title.TextSize = 14
 Title.TextXAlignment = Enum.TextXAlignment.Left
@@ -102,9 +111,9 @@ Title.Parent = TitleBar
 local MinimizeBtn = Instance.new("TextButton")
 MinimizeBtn.Size = UDim2.new(0, 28, 0, 26)
 MinimizeBtn.Position = UDim2.new(1, -70, 0, 6)
-MinimizeBtn.BackgroundColor3 = Color3.fromRGB(45, 45, 52)
+MinimizeBtn.BackgroundColor3 = Color3.fromRGB(38, 34, 48)
 MinimizeBtn.Text = "−"
-MinimizeBtn.TextColor3 = Color3.fromRGB(220, 220, 220)
+MinimizeBtn.TextColor3 = Color3.fromRGB(230, 225, 245)
 MinimizeBtn.Font = Enum.Font.GothamBold
 MinimizeBtn.TextSize = 18
 MinimizeBtn.Parent = TitleBar
@@ -113,7 +122,7 @@ Instance.new("UICorner", MinimizeBtn).CornerRadius = UDim.new(0, 6)
 local CloseBtn = Instance.new("TextButton")
 CloseBtn.Size = UDim2.new(0, 28, 0, 26)
 CloseBtn.Position = UDim2.new(1, -36, 0, 6)
-CloseBtn.BackgroundColor3 = Color3.fromRGB(160, 45, 45)
+CloseBtn.BackgroundColor3 = Color3.fromRGB(170, 50, 70)
 CloseBtn.Text = "X"
 CloseBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 CloseBtn.Font = Enum.Font.GothamBold
@@ -134,7 +143,7 @@ Title.ZIndex = 21
 local TabFrame = Instance.new("Frame")
 TabFrame.Size = UDim2.new(0, 110, 1, -90)
 TabFrame.Position = UDim2.new(0, 0, 0, 38)
-TabFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 24)
+TabFrame.BackgroundColor3 = Color3.fromRGB(14, 13, 18)
 TabFrame.BorderSizePixel = 0
 TabFrame.Parent = Main
 
@@ -148,13 +157,17 @@ local function createTabButton(name, order)
 	local btn = Instance.new("TextButton")
 	btn.Size = UDim2.new(1, -10, 0, 34)
 	btn.Position = UDim2.new(0, 5, 0, 10 + (order - 1) * 42)
-	btn.BackgroundColor3 = Color3.fromRGB(35, 35, 42)
+	btn.BackgroundColor3 = Color3.fromRGB(28, 26, 36)
 	btn.Text = name
-	btn.TextColor3 = Color3.fromRGB(210, 210, 220)
+	btn.TextColor3 = Color3.fromRGB(180, 175, 195)
 	btn.Font = Enum.Font.GothamMedium
 	btn.TextSize = 13
 	btn.Parent = TabFrame
-	Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 7)
+	Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 8)
+	local ts = Instance.new("UIStroke", btn)
+	ts.Color = Color3.fromRGB(50, 45, 65)
+	ts.Thickness = 1
+	ts.Transparency = 0.4
 	return btn
 end
 
@@ -169,7 +182,7 @@ local function createPage()
 	page.BackgroundTransparency = 1
 	page.BorderSizePixel = 0
 	page.ScrollBarThickness = 3
-	page.ScrollBarImageColor3 = Color3.fromRGB(80, 80, 95)
+	page.ScrollBarImageColor3 = Color3.fromRGB(110, 80, 150)
 	page.CanvasSize = UDim2.new(0, 0, 0, 0)
 	page.Visible = false
 	page.Parent = Content
@@ -188,10 +201,10 @@ local function showPage(page, activeBtn)
 	ThreeDPlusPage.Visible = false
 	page.Visible = true
 	for _, btn in pairs({LocalTabBtn, TargetTabBtn, TextTabBtn, ThreeDPlusTabBtn}) do
-		btn.BackgroundColor3 = Color3.fromRGB(35, 35, 42)
-		btn.TextColor3 = Color3.fromRGB(210, 210, 220)
+		btn.BackgroundColor3 = Color3.fromRGB(28, 26, 36)
+		btn.TextColor3 = Color3.fromRGB(180, 175, 195)
 	end
-	activeBtn.BackgroundColor3 = Color3.fromRGB(55, 90, 160)
+	activeBtn.BackgroundColor3 = Color3.fromRGB(95, 55, 160)
 	activeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 end
 
@@ -205,26 +218,27 @@ showPage(LocalPage, LocalTabBtn)
 local BottomBar = Instance.new("Frame")
 BottomBar.Size = UDim2.new(1, 0, 0, 52)
 BottomBar.Position = UDim2.new(0, 0, 1, -52)
-BottomBar.BackgroundColor3 = Color3.fromRGB(20, 20, 24)
+BottomBar.BackgroundColor3 = Color3.fromRGB(14, 13, 18)
 BottomBar.BorderSizePixel = 0
 BottomBar.Parent = Main
 
 local BottomStroke = Instance.new("Frame")
 BottomStroke.Size = UDim2.new(1, 0, 0, 1)
-BottomStroke.BackgroundColor3 = Color3.fromRGB(40, 40, 50)
+BottomStroke.BackgroundColor3 = Color3.fromRGB(70, 45, 95)
+BottomStroke.BackgroundTransparency = 0.35
 BottomStroke.BorderSizePixel = 0
 BottomStroke.Parent = BottomBar
 
 local FreezeButton = Instance.new("TextButton")
 FreezeButton.Size = UDim2.new(0, 140, 0, 32)
 FreezeButton.Position = UDim2.new(0, 12, 0.5, -16)
-FreezeButton.BackgroundColor3 = Color3.fromRGB(50, 50, 55)
+FreezeButton.BackgroundColor3 = Color3.fromRGB(40, 38, 50)
 FreezeButton.Text = "Freeze  •  Off"
 FreezeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 FreezeButton.Font = Enum.Font.GothamMedium
 FreezeButton.TextSize = 12
 FreezeButton.Parent = BottomBar
-Instance.new("UICorner", FreezeButton).CornerRadius = UDim.new(0, 6)
+Instance.new("UICorner", FreezeButton).CornerRadius = UDim.new(0, 8)
 
 local SpeedModeButton = Instance.new("TextButton")
 SpeedModeButton.Size = UDim2.new(0, 170, 0, 32)
@@ -235,7 +249,7 @@ SpeedModeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 SpeedModeButton.Font = Enum.Font.GothamMedium
 SpeedModeButton.TextSize = 12
 SpeedModeButton.Parent = BottomBar
-Instance.new("UICorner", SpeedModeButton).CornerRadius = UDim.new(0, 6)
+Instance.new("UICorner", SpeedModeButton).CornerRadius = UDim.new(0, 8)
 
 local FixedPosButton = Instance.new("TextButton")
 FixedPosButton.Size = UDim2.new(0, 150, 0, 32)
@@ -246,7 +260,7 @@ FixedPosButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 FixedPosButton.Font = Enum.Font.GothamMedium
 FixedPosButton.TextSize = 12
 FixedPosButton.Parent = BottomBar
-Instance.new("UICorner", FixedPosButton).CornerRadius = UDim.new(0, 6)
+Instance.new("UICorner", FixedPosButton).CornerRadius = UDim.new(0, 8)
 -- ==================== OFFSET PANEL (attached to the right of Main) ====================
 Main.ClipsDescendants = false   -- important so the panel can stick out
 
@@ -254,7 +268,7 @@ local OffsetPanel = Instance.new("Frame")
 OffsetPanel.Name = "OffsetPanel"
 OffsetPanel.Size = UDim2.new(0, 78, 0, 310)
 OffsetPanel.Position = UDim2.new(1, 8, 0, 45)   -- 8 pixels to the right of Main
-OffsetPanel.BackgroundColor3 = Color3.fromRGB(18, 18, 22)
+OffsetPanel.BackgroundColor3 = Color3.fromRGB(14, 13, 18)
 OffsetPanel.BorderSizePixel = 0
 OffsetPanel.Visible = true
 OffsetPanel.ZIndex = 50
@@ -262,15 +276,16 @@ OffsetPanel.Parent = Main
 Instance.new("UICorner", OffsetPanel).CornerRadius = UDim.new(0, 10)
 
 local OffsetStroke = Instance.new("UIStroke", OffsetPanel)
-OffsetStroke.Color = Color3.fromRGB(40, 40, 50)
-OffsetStroke.Thickness = 1.2
+OffsetStroke.Color = Color3.fromRGB(70, 45, 95)
+OffsetStroke.Thickness = 1.3
+OffsetStroke.Transparency = 0.2
 
 local OffsetTitle = Instance.new("TextLabel")
 OffsetTitle.Size = UDim2.new(1, 0, 0, 22)
 OffsetTitle.Position = UDim2.new(0, 0, 0, 4)
 OffsetTitle.BackgroundTransparency = 1
 OffsetTitle.Text = "OFFSET"
-OffsetTitle.TextColor3 = Color3.fromRGB(160, 160, 180)
+OffsetTitle.TextColor3 = Color3.fromRGB(180, 150, 220)
 OffsetTitle.Font = Enum.Font.GothamBold
 OffsetTitle.TextSize = 11
 OffsetTitle.Parent = OffsetPanel
@@ -405,6 +420,7 @@ function setMinimized(state)
 		Content.Visible = false
 		BottomBar.Visible = false
 		OffsetPanel.Visible = false
+		if RotPanel then RotPanel.Visible = false end
 		Main.ClipsDescendants = true
 		Main.Size = UDim2.new(0, 540, 0, 38)
 		MinimizeBtn.Text = "+"
@@ -416,6 +432,10 @@ function setMinimized(state)
 		BottomBar.Visible = true
 		OffsetPanel.Visible = true
 		OffsetPanel.Position = UDim2.new(1, 8, 0, 45)
+		if RotPanel then
+			RotPanel.Visible = true
+			RotPanel.Position = UDim2.new(0, -86, 0, 45)
+		end
 		MinimizeBtn.Text = "−"
 	end
 end
@@ -425,6 +445,196 @@ MinimizeBtn.MouseButton1Click:Connect(function()
 	playSound("12221967")
 end)
 
+-- ==================== ROTATION PANEL (left of Main) ====================
+-- Global orient state (must exist BEFORE local ST is created so sliders work)
+ORIENT = ORIENT or { pitch = 0, yaw = 0, roll = 0 }
+ORIENT_SMOOTH = ORIENT_SMOOTH or { pitch = 0, yaw = 0, roll = 0 }
+ORIENT_SMOOTH_SPEED = 10 -- higher = snappier, lower = silkier
+
+RotPanel = Instance.new("Frame")
+RotPanel.Name = "RotPanel"
+RotPanel.Size = UDim2.new(0, 78, 0, 340)
+RotPanel.Position = UDim2.new(0, -86, 0, 45)
+RotPanel.BackgroundColor3 = Color3.fromRGB(14, 13, 18)
+RotPanel.BorderSizePixel = 0
+RotPanel.Visible = true
+RotPanel.ZIndex = 50
+RotPanel.Parent = Main
+Instance.new("UICorner", RotPanel).CornerRadius = UDim.new(0, 10)
+do
+	local s = Instance.new("UIStroke", RotPanel)
+	s.Color = Color3.fromRGB(70, 45, 95)
+	s.Thickness = 1.3
+	s.Transparency = 0.2
+end
+do
+	local t = Instance.new("TextLabel")
+	t.Size = UDim2.new(1, 0, 0, 22)
+	t.Position = UDim2.new(0, 0, 0, 4)
+	t.BackgroundTransparency = 1
+	t.Text = "ROTATE"
+	t.TextColor3 = Color3.fromRGB(180, 150, 220)
+	t.Font = Enum.Font.GothamBold
+	t.TextSize = 11
+	t.Parent = RotPanel
+end
+
+local function makeOrientSlider(title, color, y0, getVal, setVal)
+	local label = Instance.new("TextLabel")
+	label.Size = UDim2.new(1, 0, 0, 16)
+	label.Position = UDim2.new(0, 0, 0, y0)
+	label.BackgroundTransparency = 1
+	label.Text = title .. ": 0°"
+	label.TextColor3 = Color3.fromRGB(200, 200, 210)
+	label.Font = Enum.Font.GothamMedium
+	label.TextSize = 10
+	label.Parent = RotPanel
+
+	local bg = Instance.new("TextButton")
+	bg.Size = UDim2.new(0, 18, 0, 70)
+	bg.Position = UDim2.new(0.5, -9, 0, y0 + 18)
+	bg.BackgroundColor3 = Color3.fromRGB(35, 35, 42)
+	bg.BorderSizePixel = 0
+	bg.Text = ""
+	bg.AutoButtonColor = false
+	bg.Parent = RotPanel
+	Instance.new("UICorner", bg).CornerRadius = UDim.new(0, 6)
+
+	local fill = Instance.new("Frame")
+	fill.Size = UDim2.new(1, 0, 0.5, 0)
+	fill.Position = UDim2.new(0, 0, 0.5, 0)
+	fill.BackgroundColor3 = color
+	fill.BorderSizePixel = 0
+	fill.Parent = bg
+	Instance.new("UICorner", fill).CornerRadius = UDim.new(0, 6)
+
+	local knob = Instance.new("TextButton")
+	knob.Size = UDim2.new(0, 22, 0, 14)
+	knob.Position = UDim2.new(0.5, -11, 0.5, -7)
+	knob.BackgroundColor3 = Color3.fromRGB(220, 220, 230)
+	knob.Text = ""
+	knob.AutoButtonColor = false
+	knob.Parent = bg
+	Instance.new("UICorner", knob).CornerRadius = UDim.new(0, 4)
+
+	local dragging = false
+	local function applyFromY(screenY)
+		local relY = (screenY - bg.AbsolutePosition.Y) / math.max(1, bg.AbsoluteSize.Y)
+		relY = math.clamp(relY, 0, 1)
+		local deg = math.floor((0.5 - relY) * 180) -- +90 top, 0 mid, -90 bottom
+		setVal(deg)
+		label.Text = title .. ": " .. deg .. "°"
+		knob.Position = UDim2.new(0.5, -11, relY, -7)
+		fill.Size = UDim2.new(1, 0, 1 - relY, 0)
+		fill.Position = UDim2.new(0, 0, relY, 0)
+	end
+
+	local function startDrag(input)
+		dragging = true
+		applyFromY(input.Position.Y)
+	end
+
+	bg.InputBegan:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+			startDrag(input)
+		end
+	end)
+	knob.InputBegan:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+			startDrag(input)
+		end
+	end)
+	UserInputService.InputChanged:Connect(function(input)
+		if not dragging then return end
+		if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+			applyFromY(input.Position.Y)
+		end
+	end)
+	UserInputService.InputEnded:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+			dragging = false
+		end
+	end)
+end
+
+makeOrientSlider("Pitch", Color3.fromRGB(200, 90, 90), 28,
+	function() return ORIENT.pitch end,
+	function(v)
+		ORIENT.pitch = v
+		if ST then ST.orientPitch = v end
+	end)
+makeOrientSlider("Yaw", Color3.fromRGB(90, 160, 200), 128,
+	function() return ORIENT.yaw end,
+	function(v)
+		ORIENT.yaw = v
+		if ST then ST.orientYaw = v end
+	end)
+makeOrientSlider("Roll", Color3.fromRGB(160, 120, 60), 228,
+	function() return ORIENT.roll end,
+	function(v)
+		ORIENT.roll = v
+		if ST then ST.orientRoll = v end
+	end)
+
+-- Reset rotations button
+local ResetRotBtn = Instance.new("TextButton")
+ResetRotBtn.Size = UDim2.new(1, -10, 0, 22)
+ResetRotBtn.Position = UDim2.new(0, 5, 1, -28)
+ResetRotBtn.BackgroundColor3 = Color3.fromRGB(140, 55, 70)
+ResetRotBtn.Text = "Reset"
+ResetRotBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+ResetRotBtn.Font = Enum.Font.GothamBold
+ResetRotBtn.TextSize = 11
+ResetRotBtn.Parent = RotPanel
+Instance.new("UICorner", ResetRotBtn).CornerRadius = UDim.new(0, 5)
+
+-- Store knob/label refs for visual reset — re-apply mid position via shared helpers
+local function resetOrientSlidersVisual()
+	-- Fire apply at center (0°) for each by simulating mid; labels updated in set
+	for _, child in ipairs(RotPanel:GetChildren()) do
+		if child:IsA("TextLabel") and child.Text:find(":") then
+			local name = child.Text:match("^(%w+):")
+			if name == "Pitch" or name == "Yaw" or name == "Roll" then
+				child.Text = name .. ": 0°"
+			end
+		end
+	end
+	-- Reset knob/fill positions on each slider track
+	for _, child in ipairs(RotPanel:GetChildren()) do
+		if child:IsA("TextButton") and child.Size.Y.Offset == 70 then
+			local fill = child:FindFirstChildOfClass("Frame")
+			local knob = nil
+			for _, k in ipairs(child:GetChildren()) do
+				if k:IsA("TextButton") then knob = k break end
+			end
+			if fill then
+				fill.Size = UDim2.new(1, 0, 0.5, 0)
+				fill.Position = UDim2.new(0, 0, 0.5, 0)
+			end
+			if knob then
+				knob.Position = UDim2.new(0.5, -11, 0.5, -7)
+			end
+		end
+	end
+end
+
+ResetRotBtn.MouseButton1Click:Connect(function()
+	ORIENT.pitch = 0
+	ORIENT.yaw = 0
+	ORIENT.roll = 0
+	if ORIENT_SMOOTH then
+		ORIENT_SMOOTH.pitch = 0
+		ORIENT_SMOOTH.yaw = 0
+		ORIENT_SMOOTH.roll = 0
+	end
+	if ST then
+		ST.orientPitch = 0
+		ST.orientYaw = 0
+		ST.orientRoll = 0
+	end
+	resetOrientSlidersVisual()
+	playSound("12221967")
+end)
 
 -- ==================== PAGE BUTTONS ====================
 local function makeBtn(parent, text, y, color)
@@ -436,8 +646,13 @@ local function makeBtn(parent, text, y, color)
 	b.TextColor3 = Color3.fromRGB(255, 255, 255)
 	b.Font = Enum.Font.GothamMedium
 	b.TextSize = 12
+	b.AutoButtonColor = true
 	b.Parent = parent
-	Instance.new("UICorner", b).CornerRadius = UDim.new(0, 6)
+	Instance.new("UICorner", b).CornerRadius = UDim.new(0, 8)
+	local st = Instance.new("UIStroke", b)
+	st.Color = Color3.fromRGB(255, 255, 255)
+	st.Thickness = 1
+	st.Transparency = 0.88
 	return b
 end
 
@@ -450,8 +665,13 @@ local function makeHalfBtn(parent, text, x, y, color)
 	b.TextColor3 = Color3.fromRGB(255, 255, 255)
 	b.Font = Enum.Font.GothamMedium
 	b.TextSize = 12
+	b.AutoButtonColor = true
 	b.Parent = parent
-	Instance.new("UICorner", b).CornerRadius = UDim.new(0, 6)
+	Instance.new("UICorner", b).CornerRadius = UDim.new(0, 8)
+	local st = Instance.new("UIStroke", b)
+	st.Color = Color3.fromRGB(255, 255, 255)
+	st.Thickness = 1
+	st.Transparency = 0.88
 	return b
 end
 
@@ -461,7 +681,7 @@ local function makeLabel(parent, text, y)
 	l.Position = UDim2.new(0, 8, 0, y)
 	l.BackgroundTransparency = 1
 	l.Text = text
-	l.TextColor3 = Color3.fromRGB(140, 140, 155)
+	l.TextColor3 = Color3.fromRGB(170, 140, 210)
 	l.Font = Enum.Font.GothamBold
 	l.TextSize = 11
 	l.TextXAlignment = Enum.TextXAlignment.Left
@@ -490,13 +710,15 @@ local LocalPentagonButton = makeHalfBtn(LocalPage, "Pentagon  •  Off", 8, 292,
 local LocalOctagonButton = makeHalfBtn(LocalPage, "Octagon  •  Off", 200, 292, Color3.fromRGB(60, 90, 80))
 local LocalDiamondButton = makeHalfBtn(LocalPage, "Diamond  •  Off", 8, 326, Color3.fromRGB(100, 50, 80))
 local LocalCrossButton = makeHalfBtn(LocalPage, "Cross  •  Off", 200, 326, Color3.fromRGB(80, 80, 50))
+local LocalHeartButton = makeHalfBtn(LocalPage, "Heart  •  Off", 8, 360, Color3.fromRGB(160, 40, 80))
+local LocalDNAButton = makeHalfBtn(LocalPage, "DNA  •  Off", 200, 360, Color3.fromRGB(40, 120, 160))
 
-local CursorButton = makeBtn(LocalPage, "Cursor Follow  •  Off", 366, Color3.fromRGB(160, 40, 40))
+local CursorButton = makeBtn(LocalPage, "Cursor Follow  •  Off", 400, Color3.fromRGB(160, 40, 40))
 
 local RadiusFrame = Instance.new("Frame")
 RadiusFrame.Size = UDim2.new(1, -12, 0, 42)
-RadiusFrame.Position = UDim2.new(0, 6, 0, 406)
-RadiusFrame.BackgroundColor3 = Color3.fromRGB(26, 26, 32)
+RadiusFrame.Position = UDim2.new(0, 6, 0, 440)
+RadiusFrame.BackgroundColor3 = Color3.fromRGB(22, 20, 30)
 RadiusFrame.BorderSizePixel = 0
 RadiusFrame.Parent = LocalPage
 Instance.new("UICorner", RadiusFrame).CornerRadius = UDim.new(0, 7)
@@ -535,21 +757,21 @@ RadiusDisplay.Parent = RadiusFrame
 
 local LocalPartsLabel = Instance.new("TextLabel")
 LocalPartsLabel.Size = UDim2.new(1, 0, 0, 14)
-LocalPartsLabel.Position = UDim2.new(0, 0, 0, 455)
+LocalPartsLabel.Position = UDim2.new(0, 0, 0, 490)
 LocalPartsLabel.BackgroundTransparency = 1
 LocalPartsLabel.Text = "Parts: 0"
 LocalPartsLabel.TextColor3 = Color3.fromRGB(110, 190, 130)
 LocalPartsLabel.Font = Enum.Font.Gotham
 LocalPartsLabel.TextSize = 11
 LocalPartsLabel.Parent = LocalPage
-LocalPage.CanvasSize = UDim2.new(0, 0, 0, 480)
+LocalPage.CanvasSize = UDim2.new(0, 0, 0, 540)
 
 -- TARGET PAGE
 makeLabel(TargetPage, "TARGET PLAYER", 6)
 local NameBox = Instance.new("TextBox")
 NameBox.Size = UDim2.new(1, -12, 0, 28)
 NameBox.Position = UDim2.new(0, 6, 0, 26)
-NameBox.BackgroundColor3 = Color3.fromRGB(26, 26, 32)
+NameBox.BackgroundColor3 = Color3.fromRGB(22, 20, 30)
 NameBox.Text = ""
 NameBox.PlaceholderText = "Player name..."
 NameBox.PlaceholderColor3 = Color3.fromRGB(90, 90, 100)
@@ -567,7 +789,7 @@ local PlayerListFrame = Instance.new("ScrollingFrame")
 PlayerListFrame.Name = "PlayerList"
 PlayerListFrame.Size = UDim2.new(1, -12, 0, 110)
 PlayerListFrame.Position = UDim2.new(0, 6, 0, 90)
-PlayerListFrame.BackgroundColor3 = Color3.fromRGB(22, 22, 28)
+PlayerListFrame.BackgroundColor3 = Color3.fromRGB(18, 16, 24)
 PlayerListFrame.BorderSizePixel = 0
 PlayerListFrame.ScrollBarThickness = 4
 PlayerListFrame.ScrollBarImageColor3 = Color3.fromRGB(80, 80, 100)
@@ -612,7 +834,7 @@ local TargetCrossButton = makeHalfBtn(TargetPage, "Cross  •  Off", 200, 456, C
 local TargetRadiusFrame = Instance.new("Frame")
 TargetRadiusFrame.Size = UDim2.new(1, -12, 0, 42)
 TargetRadiusFrame.Position = UDim2.new(0, 6, 0, 494)
-TargetRadiusFrame.BackgroundColor3 = Color3.fromRGB(26, 26, 32)
+TargetRadiusFrame.BackgroundColor3 = Color3.fromRGB(22, 20, 30)
 TargetRadiusFrame.BorderSizePixel = 0
 TargetRadiusFrame.Parent = TargetPage
 Instance.new("UICorner", TargetRadiusFrame).CornerRadius = UDim.new(0, 7)
@@ -681,7 +903,7 @@ local TextToggle = makeBtn(TextPage, "Super Text  •  Off", 62, Color3.fromRGB(
 local PixelFrame = Instance.new("Frame")
 PixelFrame.Size = UDim2.new(1, -12, 0, 42)
 PixelFrame.Position = UDim2.new(0, 6, 0, 100)
-PixelFrame.BackgroundColor3 = Color3.fromRGB(26, 26, 32)
+PixelFrame.BackgroundColor3 = Color3.fromRGB(22, 20, 30)
 PixelFrame.BorderSizePixel = 0
 PixelFrame.Parent = TextPage
 Instance.new("UICorner", PixelFrame).CornerRadius = UDim.new(0, 7)
@@ -789,6 +1011,7 @@ UserInputService.InputChanged:Connect(function(input)
 		local delta = input.Position - dragStart
 		Main.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
 		updateOffsetPanelPos()
+		if RotPanel then RotPanel.Position = UDim2.new(0, -86, 0, 45) end
 	end
 end)
 
@@ -838,6 +1061,9 @@ local ST = {
 	lastLocalTriCount = 30,
 	lastTargetTriCount = 30,
 	frozenAngle = 0,
+	orientPitch = (ORIENT and ORIENT.pitch) or 0,
+	orientYaw = (ORIENT and ORIENT.yaw) or 0,
+	orientRoll = (ORIENT and ORIENT.roll) or 0,
 }
 threeDPlusShape = nil
 local parts = {}
@@ -848,6 +1074,7 @@ local LS = {
 	sphere = false, square = false, cube = false, downcone = false, ball = false,
 	hex = false, rect = false, box = false, pyramid = false, cone = false,
 	octa = false, star = false, pentagon = false, octagon = false, diamond = false, cross = false,
+	heart = false, dna = false,
 }
 local TS = {
 	sphere = false, square = false, cube = false, downcone = false, ball = false,
@@ -997,7 +1224,7 @@ Workspace.DescendantRemoving:Connect(removePart)
 local function anyShapeActive()
 	return ST.textEnabled or ST.ringPartsEnabled or LS.sphere or LS.square or LS.cube or LS.downcone or LS.ball
 		or LS.hex or LS.rect or LS.box or LS.pyramid or LS.cone or LS.octa or LS.star
-		or LS.pentagon or LS.octagon or LS.diamond or LS.cross or threeDPlusShape ~= nil
+		or LS.pentagon or LS.octagon or LS.diamond or LS.cross or LS.heart or LS.dna or threeDPlusShape ~= nil
 		or ST.cursorRingEnabled or ST.targetRingEnabled or TS.sphere or TS.square or TS.cube or TS.downcone or TS.ball
 		or TS.hex or TS.rect or TS.box or TS.pyramid or TS.cone or TS.octa or TS.star
 		or TS.pentagon or TS.octagon or TS.diamond or TS.cross
@@ -1014,7 +1241,7 @@ local function isLocalPart(index, total)
 		and not TS.pentagon and not TS.octagon and not TS.diamond and not TS.cross then return true end
 	if not ST.ringPartsEnabled and not LS.sphere and not LS.square and not LS.cube and not LS.downcone and not LS.ball
 		and not LS.hex and not LS.rect and not LS.box and not LS.pyramid and not LS.cone and not LS.octa and not LS.star
-		and not LS.pentagon and not LS.octagon and not LS.diamond and not LS.cross and threeDPlusShape == nil then return false end
+		and not LS.pentagon and not LS.octagon and not LS.diamond and not LS.cross and not LS.heart and not LS.dna and threeDPlusShape == nil then return false end
 	return index <= math.floor(total * 0.7)
 end
 
@@ -1269,6 +1496,137 @@ function getCrossEdges(center, radius, angle)
 		{make(-t, t), make(-s, t)}, {make(-s, t), make(-s, -t)},
 		{make(-s, -t), make(-t, -t)}, {make(-t, -t), make(-t, -s)}
 	}
+end
+
+
+-- Smooth orient toward slider targets every frame (kills rotation jitter)
+RunService.Heartbeat:Connect(function(dt)
+	if not ORIENT or not ORIENT_SMOOTH then return end
+	local a = math.clamp((ORIENT_SMOOTH_SPEED or 10) * (dt or 0.016), 0, 1)
+	ORIENT_SMOOTH.pitch = ORIENT_SMOOTH.pitch + (ORIENT.pitch - ORIENT_SMOOTH.pitch) * a
+	ORIENT_SMOOTH.yaw   = ORIENT_SMOOTH.yaw   + (ORIENT.yaw   - ORIENT_SMOOTH.yaw)   * a
+	ORIENT_SMOOTH.roll  = ORIENT_SMOOTH.roll  + (ORIENT.roll  - ORIENT_SMOOTH.roll)  * a
+end)
+
+-- Orient a point relative to center using SMOOTHED Pitch / Yaw / Roll
+function orientPoint(center, worldPos)
+	local rel = worldPos - center
+	local op = (ORIENT_SMOOTH and ORIENT_SMOOTH.pitch) or (ORIENT and ORIENT.pitch) or 0
+	local oy = (ORIENT_SMOOTH and ORIENT_SMOOTH.yaw) or (ORIENT and ORIENT.yaw) or 0
+	local orr = (ORIENT_SMOOTH and ORIENT_SMOOTH.roll) or (ORIENT and ORIENT.roll) or 0
+	local p = math.rad(op)
+	local y = math.rad(oy)
+	local r = math.rad(orr)
+	-- Yaw (Y)
+	local cosY, sinY = math.cos(y), math.sin(y)
+	local x1 = rel.X * cosY + rel.Z * sinY
+	local y1 = rel.Y
+	local z1 = -rel.X * sinY + rel.Z * cosY
+	-- Pitch (X)
+	local cosP, sinP = math.cos(p), math.sin(p)
+	local x2 = x1
+	local y2 = y1 * cosP - z1 * sinP
+	local z2 = y1 * sinP + z1 * cosP
+	-- Roll (Z)
+	local cosR, sinR = math.cos(r), math.sin(r)
+	local x3 = x2 * cosR - y2 * sinR
+	local y3 = x2 * sinR + y2 * cosR
+	local z3 = z2
+	return Vector3.new(center.X + x3, center.Y + y3, center.Z + z3)
+end
+
+function orientEdges(center, edges)
+	if not edges or #edges == 0 then return edges end
+	local op = (ORIENT_SMOOTH and ORIENT_SMOOTH.pitch) or (ORIENT and ORIENT.pitch) or 0
+	local oy = (ORIENT_SMOOTH and ORIENT_SMOOTH.yaw) or (ORIENT and ORIENT.yaw) or 0
+	local orr = (ORIENT_SMOOTH and ORIENT_SMOOTH.roll) or (ORIENT and ORIENT.roll) or 0
+	-- still run while smoothing toward zero/nonzero so it eases
+	if math.abs(op) < 0.05 and math.abs(oy) < 0.05 and math.abs(orr) < 0.05
+		and (not ORIENT or (ORIENT.pitch == 0 and ORIENT.yaw == 0 and ORIENT.roll == 0)) then
+		return edges
+	end
+	local out = table.create(#edges)
+	for i, e in ipairs(edges) do
+		out[i] = { orientPoint(center, e[1]), orientPoint(center, e[2]) }
+	end
+	return out
+end
+
+function orientPoints(center, points)
+	if not points or #points == 0 then return points end
+	local op = (ORIENT_SMOOTH and ORIENT_SMOOTH.pitch) or (ORIENT and ORIENT.pitch) or 0
+	local oy = (ORIENT_SMOOTH and ORIENT_SMOOTH.yaw) or (ORIENT and ORIENT.yaw) or 0
+	local orr = (ORIENT_SMOOTH and ORIENT_SMOOTH.roll) or (ORIENT and ORIENT.roll) or 0
+	if math.abs(op) < 0.05 and math.abs(oy) < 0.05 and math.abs(orr) < 0.05
+		and (not ORIENT or (ORIENT.pitch == 0 and ORIENT.yaw == 0 and ORIENT.roll == 0)) then
+		return points
+	end
+	local out = table.create(#points)
+	for i, p in ipairs(points) do
+		out[i] = orientPoint(center, p)
+	end
+	return out
+end
+
+function getHeartEdges(center, radius, angle)
+	local edges = {}
+	local pts = {}
+	local steps = 28
+	local scale = radius / 16
+	local cosA, sinA = math.cos(angle), math.sin(angle)
+	for i = 0, steps do
+		local t = (i / steps) * math.pi * 2
+		local hx = 16 * (math.sin(t) ^ 3)
+		local hy = 13 * math.cos(t) - 5 * math.cos(2 * t) - 2 * math.cos(3 * t) - math.cos(4 * t)
+		local x, z = hx * scale, hy * scale
+		local rx = x * cosA - z * sinA
+		local rz = x * sinA + z * cosA
+		table.insert(pts, Vector3.new(center.X + rx, center.Y, center.Z + rz))
+	end
+	for i = 1, #pts - 1 do
+		table.insert(edges, {pts[i], pts[i + 1]})
+	end
+	if #pts > 1 then
+		table.insert(edges, {pts[#pts], pts[1]})
+	end
+	return edges
+end
+
+function getDNAEdges(center, radius, angle)
+	-- True-looking DNA: 2 backbone strands + base-pair rungs (not a single spring)
+	local edges = {}
+	local turns = 2.0          -- fewer turns = less "springy"
+	local segments = 36
+	local height = radius * 2.8
+	local rad = radius * 0.72  -- wider helix so strands are distinct
+	local rungEvery = 2        -- base pair every N segments
+
+	local strandA = {}
+	local strandB = {}
+	for i = 0, segments do
+		local t = i / segments
+		local a = t * turns * math.pi * 2 + angle
+		local yy = (t - 0.5) * height
+		-- slight oval so strands read as ribbons
+		local cx = math.cos(a) * rad
+		local cz = math.sin(a) * rad
+		table.insert(strandA, Vector3.new(center.X + cx, center.Y + yy, center.Z + cz))
+		table.insert(strandB, Vector3.new(center.X - cx, center.Y + yy, center.Z - cz))
+	end
+
+	-- backbone A
+	for i = 1, #strandA - 1 do
+		table.insert(edges, {strandA[i], strandA[i + 1]})
+	end
+	-- backbone B
+	for i = 1, #strandB - 1 do
+		table.insert(edges, {strandB[i], strandB[i + 1]})
+	end
+	-- base-pair rungs (straight bars between strands)
+	for i = 1, #strandA, rungEvery do
+		table.insert(edges, {strandA[i], strandB[i]})
+	end
+	return edges
 end
 
 local function getSpherePoints(center, radius, angleOffset)
@@ -1859,7 +2217,7 @@ RunService.Heartbeat:Connect(function()
 
 	if not ST.ringPartsEnabled and not LS.sphere and not LS.square and not LS.cube and not LS.downcone and not LS.ball
 		and not LS.hex and not LS.rect and not LS.box and not LS.pyramid and not LS.cone and not LS.octa and not LS.star
-		and not LS.pentagon and not LS.octagon and not LS.diamond and not LS.cross and threeDPlusShape == nil then
+		and not LS.pentagon and not LS.octagon and not LS.diamond and not LS.cross and not LS.heart and not LS.dna and threeDPlusShape == nil then
 		LocalPartsLabel.Text = "Parts: 0"
 		return
 	end
@@ -1877,30 +2235,32 @@ RunService.Heartbeat:Connect(function()
 	local p1 = Vector3.new(center.X + math.cos(a1)*r, center.Y, center.Z + math.sin(a1)*r)
 	local p2 = Vector3.new(center.X + math.cos(a2)*r, center.Y, center.Z + math.sin(a2)*r)
 	local p3 = Vector3.new(center.X + math.cos(a3)*r, center.Y, center.Z + math.sin(a3)*r)
-	local triEdges = {{p1,p2},{p2,p3},{p3,p1}}
+	local triEdges = orientEdges(center, {{p1,p2},{p2,p3},{p3,p1}})
 
 	local s1,s2,s3,s4 = baseAngle, baseAngle+1.5708, baseAngle+3.1416, baseAngle+4.7124
 	local sp1 = Vector3.new(center.X + math.cos(s1)*r, center.Y, center.Z + math.sin(s1)*r)
 	local sp2 = Vector3.new(center.X + math.cos(s2)*r, center.Y, center.Z + math.sin(s2)*r)
 	local sp3 = Vector3.new(center.X + math.cos(s3)*r, center.Y, center.Z + math.sin(s3)*r)
 	local sp4 = Vector3.new(center.X + math.cos(s4)*r, center.Y, center.Z + math.sin(s4)*r)
-	local squareEdges = {{sp1,sp2},{sp2,sp3},{sp3,sp4},{sp4,sp1}}
+	local squareEdges = orientEdges(center, {{sp1,sp2},{sp2,sp3},{sp3,sp4},{sp4,sp1}})
 
-	local cubeEdges = getCubeEdges(center, r * 1.8, spinAngle)
-	local hexEdges = getHexEdges(center, r, spinAngle)
-	local rectEdges = getRectEdges(center, r * 2.2, r * 1.1, spinAngle)
-	local boxEdges = getBoxEdges(center, r * 2.4, r * 1.2, r * 1.4, spinAngle)
-	local pyramidEdges = getPyramidEdges(center, r * 1.9, spinAngle)
-	local coneEdges = getConeEdges(center, r * 0.95, r * 1.6, spinAngle, false)
-	local downConeEdges = getConeEdges(center, r * 0.95, r * 1.6, spinAngle, true)
-	local octaEdges = getOctaEdges(center, r * 1.5, spinAngle)
-	local starEdges = getStarEdges(center, r, spinAngle)
-	local pentagonEdges = getPentagonEdges(center, r, spinAngle)
-	local octagonEdges = getOctagonEdges(center, r, spinAngle)
-	local diamondEdges = getDiamondEdges(center, r, spinAngle)
-	local crossEdges = getCrossEdges(center, r, spinAngle)
-	local threeDPlusEdges = threeDPlusShape and get3DPlusEdges(center, r, spinAngle, threeDPlusShape) or {}
-	local spherePoints = LS.ball and getSpherePoints(center, r * 0.95, spinAngle) or {}
+	local cubeEdges = orientEdges(center, getCubeEdges(center, r * 1.8, spinAngle))
+	local hexEdges = orientEdges(center, getHexEdges(center, r, spinAngle))
+	local rectEdges = orientEdges(center, getRectEdges(center, r * 2.2, r * 1.1, spinAngle))
+	local boxEdges = orientEdges(center, getBoxEdges(center, r * 2.4, r * 1.2, r * 1.4, spinAngle))
+	local pyramidEdges = orientEdges(center, getPyramidEdges(center, r * 1.9, spinAngle))
+	local coneEdges = orientEdges(center, getConeEdges(center, r * 0.95, r * 1.6, spinAngle, false))
+	local downConeEdges = orientEdges(center, getConeEdges(center, r * 0.95, r * 1.6, spinAngle, true))
+	local octaEdges = orientEdges(center, getOctaEdges(center, r * 1.5, spinAngle))
+	local starEdges = orientEdges(center, getStarEdges(center, r, spinAngle))
+	local pentagonEdges = orientEdges(center, getPentagonEdges(center, r, spinAngle))
+	local octagonEdges = orientEdges(center, getOctagonEdges(center, r, spinAngle))
+	local diamondEdges = orientEdges(center, getDiamondEdges(center, r, spinAngle))
+	local crossEdges = orientEdges(center, getCrossEdges(center, r, spinAngle))
+	local heartEdges = LS.heart and orientEdges(center, getHeartEdges(center, r, spinAngle)) or {}
+	local dnaEdges = LS.dna and orientEdges(center, getDNAEdges(center, r, spinAngle)) or {}
+	local threeDPlusEdges = threeDPlusShape and orientEdges(center, get3DPlusEdges(center, r, spinAngle, threeDPlusShape)) or {}
+	local spherePoints = LS.ball and orientPoints(center, getSpherePoints(center, r * 0.95, spinAngle)) or {}
 
 	for i, part in ipairs(parts) do
 		if part.Parent and not part.Anchored and isLocalPart(i, total) then
@@ -1934,6 +2294,26 @@ RunService.Heartbeat:Connect(function()
 				local idxOnEdge = math.floor((triCounter - 1) / #crossEdges)
 				local t = (idxOnEdge % partsPerEdge) / partsPerEdge
 				targetPos = crossEdges[edgeIndex][1]:Lerp(crossEdges[edgeIndex][2], t)
+			elseif LS.heart then
+				if #heartEdges > 0 then
+					local edgeIndex = ((triCounter - 1) % #heartEdges) + 1
+					local partsPerEdge = math.max(1, math.floor(ST.lastLocalTriCount / #heartEdges))
+					local idxOnEdge = math.floor((triCounter - 1) / #heartEdges)
+					local t = (idxOnEdge % partsPerEdge) / partsPerEdge
+					targetPos = heartEdges[edgeIndex][1]:Lerp(heartEdges[edgeIndex][2], t)
+				else
+					targetPos = center
+				end
+			elseif LS.dna then
+				if #dnaEdges > 0 then
+					local edgeIndex = ((triCounter - 1) % #dnaEdges) + 1
+					local partsPerEdge = math.max(1, math.floor(ST.lastLocalTriCount / #dnaEdges))
+					local idxOnEdge = math.floor((triCounter - 1) / #dnaEdges)
+					local t = (idxOnEdge % partsPerEdge) / partsPerEdge
+					targetPos = dnaEdges[edgeIndex][1]:Lerp(dnaEdges[edgeIndex][2], t)
+				else
+					targetPos = center
+				end
 			elseif LS.diamond then
 				local edgeIndex = ((triCounter - 1) % 4) + 1
 				local partsPerEdge = math.max(1, math.floor(ST.lastLocalTriCount / 4))
@@ -2007,6 +2387,7 @@ RunService.Heartbeat:Connect(function()
 				local t = (idxOnEdge % partsPerEdge) / partsPerEdge
 				targetPos = squareEdges[edgeIndex][1]:Lerp(squareEdges[edgeIndex][2], t)
 			else
+				-- YOUR RING (original): no rotation-panel orient — shapes only
 				local pos = part.Position
 				local angle = math.atan2(pos.Z - center.Z, pos.X - center.X)
 				local newAngle = ST.freezeEnabled and angle or (angle + math.rad(ST.rotationSpeed))
@@ -2020,7 +2401,7 @@ RunService.Heartbeat:Connect(function()
 
 			if not LS.sphere and not LS.square and not LS.cube and not LS.downcone and not LS.ball
 				and not LS.hex and not LS.rect and not LS.box and not LS.pyramid and not LS.cone and not LS.octa and not LS.star
-				and not LS.pentagon and not LS.octagon and not LS.diamond and not LS.cross and threeDPlusShape == nil then
+				and not LS.pentagon and not LS.octagon and not LS.diamond and not LS.cross and not LS.heart and not LS.dna and threeDPlusShape == nil then
 				local dir = targetPos - part.Position
 				if dir.Magnitude > 0.01 then
 					part.Velocity = dir.Unit * ST.attractionStrength
@@ -2088,29 +2469,29 @@ RunService.Heartbeat:Connect(function()
 	local p1 = Vector3.new(center.X+math.cos(a1)*r, center.Y, center.Z+math.sin(a1)*r)
 	local p2 = Vector3.new(center.X+math.cos(a2)*r, center.Y, center.Z+math.sin(a2)*r)
 	local p3 = Vector3.new(center.X+math.cos(a3)*r, center.Y, center.Z+math.sin(a3)*r)
-	local triEdges = {{p1,p2},{p2,p3},{p3,p1}}
+	local triEdges = orientEdges(center, {{p1,p2},{p2,p3},{p3,p1}})
 
 	local s1,s2,s3,s4 = baseAngle, baseAngle+1.5708, baseAngle+3.1416, baseAngle+4.7124
 	local sp1 = Vector3.new(center.X+math.cos(s1)*r, center.Y, center.Z+math.sin(s1)*r)
 	local sp2 = Vector3.new(center.X+math.cos(s2)*r, center.Y, center.Z+math.sin(s2)*r)
 	local sp3 = Vector3.new(center.X+math.cos(s3)*r, center.Y, center.Z+math.sin(s3)*r)
 	local sp4 = Vector3.new(center.X+math.cos(s4)*r, center.Y, center.Z+math.sin(s4)*r)
-	local squareEdges = {{sp1,sp2},{sp2,sp3},{sp3,sp4},{sp4,sp1}}
+	local squareEdges = orientEdges(center, {{sp1,sp2},{sp2,sp3},{sp3,sp4},{sp4,sp1}})
 
-	local cubeEdges = getCubeEdges(center, r * 1.8, spinAngle)
-	local hexEdges = getHexEdges(center, r, spinAngle)
-	local rectEdges = getRectEdges(center, r * 2.2, r * 1.1, spinAngle)
-	local boxEdges = getBoxEdges(center, r * 2.4, r * 1.2, r * 1.4, spinAngle)
-	local pyramidEdges = getPyramidEdges(center, r * 1.9, spinAngle)
-	local coneEdges = getConeEdges(center, r * 0.95, r * 1.6, spinAngle, false)
-	local downConeEdges = getConeEdges(center, r * 0.95, r * 1.6, spinAngle, true)
-	local octaEdges = getOctaEdges(center, r * 1.5, spinAngle)
-	local starEdges = getStarEdges(center, r, spinAngle)
-	local pentagonEdges = getPentagonEdges(center, r, spinAngle)
-	local octagonEdges = getOctagonEdges(center, r, spinAngle)
-	local diamondEdges = getDiamondEdges(center, r, spinAngle)
-	local crossEdges = getCrossEdges(center, r, spinAngle)
-	local spherePoints = TS.ball and getSpherePoints(center, r * 0.95, spinAngle) or {}
+	local cubeEdges = orientEdges(center, getCubeEdges(center, r * 1.8, spinAngle))
+	local hexEdges = orientEdges(center, getHexEdges(center, r, spinAngle))
+	local rectEdges = orientEdges(center, getRectEdges(center, r * 2.2, r * 1.1, spinAngle))
+	local boxEdges = orientEdges(center, getBoxEdges(center, r * 2.4, r * 1.2, r * 1.4, spinAngle))
+	local pyramidEdges = orientEdges(center, getPyramidEdges(center, r * 1.9, spinAngle))
+	local coneEdges = orientEdges(center, getConeEdges(center, r * 0.95, r * 1.6, spinAngle, false))
+	local downConeEdges = orientEdges(center, getConeEdges(center, r * 0.95, r * 1.6, spinAngle, true))
+	local octaEdges = orientEdges(center, getOctaEdges(center, r * 1.5, spinAngle))
+	local starEdges = orientEdges(center, getStarEdges(center, r, spinAngle))
+	local pentagonEdges = orientEdges(center, getPentagonEdges(center, r, spinAngle))
+	local octagonEdges = orientEdges(center, getOctagonEdges(center, r, spinAngle))
+	local diamondEdges = orientEdges(center, getDiamondEdges(center, r, spinAngle))
+	local crossEdges = orientEdges(center, getCrossEdges(center, r, spinAngle))
+	local spherePoints = TS.ball and orientPoints(center, getSpherePoints(center, r * 0.95, spinAngle)) or {}
 
 	for i, part in ipairs(parts) do
 		if part.Parent and not part.Anchored and not isLocalPart(i, total) then
@@ -2253,24 +2634,17 @@ RunService.Heartbeat:Connect(function()
 				local t = (idxOnEdge % partsPerEdge) / partsPerEdge
 				targetPos = squareEdges[edgeIndex][1]:Lerp(squareEdges[edgeIndex][2], t)
 			else
-				-- Default target ring: stable orbit around the player
-				local pos = part.Position
-				local angle = math.atan2(pos.Z - center.Z, pos.X - center.X)
-				if angle ~= angle then angle = (triCounter * 0.37) end -- NaN guard
+				-- Default target ring: stable orbit, respects ROTATE panel
+				local angle = math.atan2(part.Position.Z - center.Z, part.Position.X - center.X)
+				if angle ~= angle then angle = (triCounter * 0.37) end
 				local newAngle = ST.freezeEnabled and angle or (angle + math.rad(ST.targetRotationSpeed))
-				local flat = Vector3.new(pos.X - center.X, 0, pos.Z - center.Z)
-				local dist = flat.Magnitude
-				if dist < 1 then dist = r end
-				local useR = math.clamp(dist, r * 0.35, r)
-				if not ST.freezeEnabled then
-					useR = r
-				end
-				local yOff = math.sin(newAngle * 2 + triCounter * 0.15) * math.min(8, ST.targetHeight * 0.08)
-				targetPos = Vector3.new(
+				local useR = r
+				local flat = Vector3.new(
 					center.X + math.cos(newAngle) * useR,
-					center.Y + yOff,
+					center.Y,
 					center.Z + math.sin(newAngle) * useR
 				)
+				targetPos = orientPoint(center, flat)
 			end
 
 			if not TS.sphere and not TS.square and not TS.cube and not TS.downcone and not TS.ball
@@ -2310,6 +2684,8 @@ local function turnOffLocalShapes()
 	LS.octagon = false
 	LS.diamond = false
 	LS.cross = false
+	LS.heart = false
+	LS.dna = false
 	threeDPlusShape = nil
 	ST.cursorRingEnabled = false
 
@@ -2347,6 +2723,10 @@ local function turnOffLocalShapes()
 	LocalDiamondButton.BackgroundColor3 = Color3.fromRGB(100, 50, 80)
 	LocalCrossButton.Text = "Cross  •  Off"
 	LocalCrossButton.BackgroundColor3 = Color3.fromRGB(80, 80, 50)
+	LocalHeartButton.Text = "Heart  •  Off"
+	LocalHeartButton.BackgroundColor3 = Color3.fromRGB(160, 40, 80)
+	LocalDNAButton.Text = "DNA  •  Off"
+	LocalDNAButton.BackgroundColor3 = Color3.fromRGB(40, 120, 160)
 	CursorButton.Text = "Cursor Follow  •  Off"
 	CursorButton.BackgroundColor3 = Color3.fromRGB(160, 40, 40)
 	for i, shapeName in ipairs(ThreeDPlusShapeNames) do
@@ -2611,6 +2991,14 @@ local function setLocalShape(shape)
 		LS.cross = true
 		LocalCrossButton.Text = "Cross  •  On"
 		LocalCrossButton.BackgroundColor3 = Color3.fromRGB(130, 130, 70)
+	elseif shape == "heart" then
+		LS.heart = true
+		LocalHeartButton.Text = "Heart  •  On"
+		LocalHeartButton.BackgroundColor3 = Color3.fromRGB(200, 50, 100)
+	elseif shape == "dna" then
+		LS.dna = true
+		LocalDNAButton.Text = "DNA  •  On"
+		LocalDNAButton.BackgroundColor3 = Color3.fromRGB(50, 160, 200)
 	end
 end
 
@@ -2692,6 +3080,16 @@ end)
 LocalCrossButton.MouseButton1Click:Connect(function()
 	if ST.cursorRingEnabled or ST.textEnabled then return end
 	if LS.cross then turnOffLocalShapes() else setLocalShape("cross") end
+	playSound("12221967")
+end)
+LocalHeartButton.MouseButton1Click:Connect(function()
+	if ST.cursorRingEnabled or ST.textEnabled then return end
+	if LS.heart then turnOffLocalShapes() else setLocalShape("heart") end
+	playSound("12221967")
+end)
+LocalDNAButton.MouseButton1Click:Connect(function()
+	if ST.cursorRingEnabled or ST.textEnabled then return end
+	if LS.dna then turnOffLocalShapes() else setLocalShape("dna") end
 	playSound("12221967")
 end)
 
